@@ -27,11 +27,7 @@ The project is structured into three main files:
 
    ```cd whiteboard-app```
 
-3. Install the required dependencies:
-
-   ```pip install -r requirements.txt```
-
-4. Run the application:
+3. Run the application:
 
    ```python main.py```
 
@@ -45,7 +41,8 @@ The project is structured into three main files:
 - Save and load drawings using the "Save" and "Load" buttons.
 - Take notes alongside drawings by clicking the "Notes" button.
 
-## Note
+## Note 
 There are some bugs in this version:
 - The saved pickle files lose all the data when reopened using the app.
 - Toggling between dark and white modes mid-drawing does not flip the eraser contour.
+
