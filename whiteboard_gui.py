@@ -51,5 +51,5 @@ class WhiteboardGUI:
         self.text_widget = tk.Text(self.controls_frame, height=6, width=120)
         self.text_widget.pack_forget()
 
-        self.logic.set_widgets(self.root, self.canvas, self.controls_frame, self.color_button, self.clear_button, self.save_button, self.dark_mode_button, self.eraser_button, self.line_width_label, self.line_width_slider, self.text_widget, self.text_widget_label)
+        self.logic.set_widgets(self.root, self.canvas, self.controls_frame, self.color_button, self.clear_button, self.save_button, self.dark_mode_button, self.eraser_button, self.line_width_label, self.line_width_slider, self.text_widget, self.text_widget_label, self.notes_button)
         self.logic.update_theme()
