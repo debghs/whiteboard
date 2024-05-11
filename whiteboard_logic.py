@@ -15,7 +15,7 @@ class WhiteboardLogic:
         self.last_line_width = 2
         self.eraser_size = 20
 
-    def set_widgets(self, root, canvas, controls_frame, color_button, clear_button, save_button, dark_mode_button, eraser_button, line_width_label, line_width_slider, text_widget, text_widget_label):
+    def set_widgets(self, root, canvas, controls_frame, color_button, clear_button, save_button, dark_mode_button, eraser_button, line_width_label, line_width_slider, text_widget, text_widget_label,notes_button):
         self.root = root
         self.canvas = canvas
         self.controls_frame = controls_frame
@@ -28,6 +28,7 @@ class WhiteboardLogic:
         self.line_width_slider = line_width_slider
         self.text_widget = text_widget
         self.text_widget_label = text_widget_label
+        self.notes_button = notes_button
         
     def start_drawing(self, event):
         self.is_drawing = True
@@ -90,6 +91,7 @@ class WhiteboardLogic:
             self.text_widget_label.config(bg="gray20", fg="white")
             self.text_widget.config(bg="gray30", fg="white")
             self.dark_mode_button.config(text="Light Mode", bg="gray30", fg="white")
+            self.notes_button.config(text="notes", bg="gray30", fg="white")
         else:
             self.root.config(bg="white")
             self.canvas.config(bg="white")
@@ -103,6 +105,7 @@ class WhiteboardLogic:
             self.text_widget_label.config(bg="white", fg="black")
             self.text_widget.config(bg="white", fg="black")
             self.dark_mode_button.config(text="Dark Mode", bg="white", fg="black")
+            self.notes_button.config(text="notes", bg="white", fg="black")
 
     def save_canvas(self):
         file_path = filedialog.asksaveasfilename(defaultextension=".pkl", filetypes=[("Pickle files", "*.pkl")])
