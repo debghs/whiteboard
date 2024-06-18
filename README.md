@@ -44,5 +44,3 @@ The project is structured into three main files:
 ## Note 
 There are some bugs in this version:
 - The saved pickle files lose all the data when reopened using the app.
-- Toggling between dark and white modes mid-drawing does not flip the eraser contour colour.
-
