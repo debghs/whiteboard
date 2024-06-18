@@ -1,9 +1,7 @@
 import tkinter as tk
-from whiteboard_gui import WhiteboardGUI
-from whiteboard_logic import WhiteboardLogic
+from whiteboard_gui import WhiteboardApp
 
 if __name__ == "__main__":
     root = tk.Tk()
-    logic = WhiteboardLogic()
-    gui = WhiteboardGUI(root, logic)
+    app = WhiteboardApp(root)
     root.mainloop()
