@@ -8,7 +8,7 @@ class WhiteboardApp:
         self.root.title("Whiteboard")
         self.root.geometry("1050x600+150+50")
         self.root.resizable(True, True)
-        icon_img = PhotoImage(file="white-board_icon.png")
+        icon_img = PhotoImage(file="assets\icon.png")
         self.root.iconphoto(False, icon_img)
 
         self.controls_frame = tk.Frame(self.root)
