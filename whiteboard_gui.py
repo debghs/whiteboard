@@ -26,6 +26,7 @@ class WhiteboardApp(WhiteboardLogic):
         self.dark_mode_button = tk.Button(self.controls_frame, text="Dark Mode", relief="groove", command=self.toggle_dark_mode)
         self.eraser_button = tk.Button(self.controls_frame, text="Eraser", relief="groove", command=self.toggle_eraser)
         self.notes_button = tk.Button(self.controls_frame, text="Notes", relief="groove", command=self.toggle_notes_section)
+        self.freehand_button = tk.Button(self.controls_frame, text="Freehand", relief="groove", command=self.select_freehand)
         self.line_button = tk.Button(self.controls_frame, text="Line", relief="groove", command=lambda: self.select_shape("line"))
         self.rectangle_button = tk.Button(self.controls_frame, text="Rectangle", relief="groove", command=lambda: self.select_shape("rectangle"))
         self.circle_button = tk.Button(self.controls_frame, text="Circle", relief="groove", command=lambda: self.select_shape("circle"))
@@ -37,6 +38,7 @@ class WhiteboardApp(WhiteboardLogic):
         self.dark_mode_button.pack(side="left", padx=5, pady=5)
         self.eraser_button.pack(side="left", padx=5, pady=5)
         self.notes_button.pack(side="left", padx=5, pady=5)
+        self.freehand_button.pack(side="left", padx=5, pady=5)
         self.line_button.pack(side="left", padx=5, pady=5)
         self.rectangle_button.pack(side="left", padx=5, pady=5)
         self.circle_button.pack(side="left", padx=5, pady=5)
@@ -109,7 +111,7 @@ class WhiteboardApp(WhiteboardLogic):
         button_list = [
             self.color_button, self.clear_button, self.save_button,
             self.load_button, self.dark_mode_button, self.eraser_button, self.notes_button,
-            self.line_button, self.rectangle_button, self.circle_button
+            self.freehand_button, self.line_button, self.rectangle_button, self.circle_button
         ]
 
         for button in button_list:
