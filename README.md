@@ -13,7 +13,7 @@ whiteboard is a simple drawing application built using Tkinter in Python. It all
 
 ## File Structure
 The project is structured into three main files:
-1. `main.py`: Entry point of the application, initializes the GUI and logic components.
+1. `main.py`: Entry point of the application, initializes the GUI and Logic components.
 2. `whiteboard_gui.py`: Handles the graphical user interface using Tkinter.
 3. `whiteboard_logic.py`: Contains the core logic and functionality of the Whiteboard App.
 
