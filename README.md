@@ -1,10 +1,9 @@
 # whiteboard
-
-## Overview
 whiteboard is a simple drawing application built using Tkinter in Python. It allows users to draw on a canvas, change pen colors, adjust line width, toggle dark mode, use an eraser, save and load drawings, and take notes.
 
 ## Features
 - Drawing on canvas with various colors and line widths
+- Drawing basic shapes by dragging them to the required size
 - Changing pen colors using a color picker
 - Clearing the canvas
 - Toggling dark mode for better visibility
