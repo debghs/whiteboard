@@ -34,6 +34,8 @@ The project is structured into three main files:
 - Draw on the canvas by clicking and dragging the mouse/touchpad.
 - Change pen color by clicking the "Change Color" button and selecting a color from the color picker.
 - Adjust line width using the slider.
+- Draw straight lines using the line button.
+- Draw Basic geometric shapes using the specific buttons.
 - Toggle dark mode for better visibility in different lighting conditions.
 - Use the eraser to remove drawn lines.
 - Adjust the eraser width using the same slider.
