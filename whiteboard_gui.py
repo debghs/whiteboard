@@ -14,6 +14,7 @@ class WhiteboardApp(WhiteboardLogic):
         icon_img = PhotoImage(file="assets/icon.png")
         self.root.iconphoto(False, icon_img)
         self.create_widgets()
+        self.update_cursor() 
 
     def create_widgets(self):
         self.controls_frame = tk.Frame(self.root)

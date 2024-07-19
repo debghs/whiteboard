@@ -17,6 +17,7 @@ class WhiteboardLogic:
         self.shape_start_y = None
         self.shape_id = None
         self.eraser_lines = []
+        self.cursor_circle_id = None
 
     def start_drawing(self, event):
         self.is_drawing = True
@@ -60,6 +61,7 @@ class WhiteboardLogic:
 
     def change_line_width(self, value):
         self.line_width = int(float(value))
+        self.update_cursor()
 
     def toggle_dark_mode(self):
         self.is_dark_mode = not self.is_dark_mode
@@ -68,7 +70,6 @@ class WhiteboardLogic:
     def toggle_eraser(self):
         if self.is_eraser:
             self.is_eraser = False
-            self.canvas.config(cursor="")
             self.drawing_color = self.last_drawing_color
             self.line_width_slider.set(self.last_line_width)
         else:
@@ -76,7 +77,27 @@ class WhiteboardLogic:
             self.last_drawing_color = self.drawing_color
             self.last_line_width = self.line_width_slider.get()
             self.drawing_color = self.canvas["bg"]
-            self.canvas.config(cursor="circle")
+        self.update_cursor()
+
+    def update_cursor(self):
+        if self.cursor_circle_id:
+            self.canvas.delete(self.cursor_circle_id)
+        self.root.bind("<Motion>", self.draw_cursor_circle)
+
+    def draw_cursor_circle(self, event):
+        if self.canvas.winfo_containing(event.x_root, event.y_root) == self.canvas:
+            if self.cursor_circle_id:
+                self.canvas.delete(self.cursor_circle_id)
+            x, y = event.x, event.y
+            radius = self.line_width / 2
+            self.cursor_circle_id = self.canvas.create_oval(
+                x - radius, y - radius, x + radius, y + radius,
+                outline=self.drawing_color, width=1
+            )
+        else:
+            if self.cursor_circle_id:
+                self.canvas.delete(self.cursor_circle_id)
+                self.cursor_circle_id = None
 
     def _save_canvas(self, file_path):
         canvas_data = {
