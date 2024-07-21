@@ -9,6 +9,7 @@ whiteboard is a simple drawing application built using Tkinter in Python. It all
 - Toggling dark mode for better visibility
 - Using an eraser to remove drawn lines
 - Saving and loading drawings in pickle format
+- Inserting text inside dynamically shaped custom textboxes
 - Taking notes alongside drawings
 
 ## File Structure
@@ -40,8 +41,10 @@ The project is structured into three main files:
 - Use the eraser to remove drawn lines.
 - Adjust the eraser width using the same slider.
 - Save and load drawings using the "Save" and "Load" buttons.
+- Draw a textbox, enter the text and then press ```esc``` button to save it inside the canvas.
 - Take notes alongside drawings by clicking the "Notes" button.
 
 ## Note 
 There are some bugs in this version:
 - The saved pickle files lose all the data when reopened using the app.
+- The text insertion probably needs some tuning.
