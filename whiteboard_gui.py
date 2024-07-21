@@ -31,6 +31,7 @@ class WhiteboardApp(WhiteboardLogic):
         self.line_button = tk.Button(self.controls_frame, text="Line", relief="groove", command=lambda: self.select_shape("line"))
         self.rectangle_button = tk.Button(self.controls_frame, text="Rectangle", relief="groove", command=lambda: self.select_shape("rectangle"))
         self.circle_button = tk.Button(self.controls_frame, text="Circle", relief="groove", command=lambda: self.select_shape("circle"))
+        self.text_button = tk.Button(self.controls_frame, text="Text", relief="groove", command=lambda: self.select_shape("text"))
 
         self.color_button.pack(side="left", padx=5, pady=5)
         self.clear_button.pack(side="left", padx=5, pady=5)
@@ -43,6 +44,7 @@ class WhiteboardApp(WhiteboardLogic):
         self.line_button.pack(side="left", padx=5, pady=5)
         self.rectangle_button.pack(side="left", padx=5, pady=5)
         self.circle_button.pack(side="left", padx=5, pady=5)
+        self.text_button.pack(side="left", padx=5, pady=5)
 
         self.line_width_label = tk.Label(self.controls_frame, text="Width:")
         self.line_width_label.pack(side="left", padx=5, pady=5)
@@ -112,7 +114,7 @@ class WhiteboardApp(WhiteboardLogic):
         button_list = [
             self.color_button, self.clear_button, self.save_button,
             self.load_button, self.dark_mode_button, self.eraser_button, self.notes_button,
-            self.freehand_button, self.line_button, self.rectangle_button, self.circle_button
+            self.freehand_button, self.line_button, self.rectangle_button, self.circle_button, self.text_button
         ]
 
         for button in button_list:

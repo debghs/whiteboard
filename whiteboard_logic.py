@@ -18,12 +18,23 @@ class WhiteboardLogic:
         self.shape_id = None
         self.eraser_lines = []
         self.cursor_circle_id = None
+        self.text_boxes = []
+        self.active_textbox = None
+        self.textbox_window = None
+        self.textbox = None  # Added to store reference to the text widget
 
     def start_drawing(self, event):
         self.is_drawing = True
         self.prev_x, self.prev_y = event.x, event.y
 
-        if self.current_shape and not self.is_eraser:
+        if self.current_shape == "text":
+            if self.active_textbox:
+                self.canvas.delete(self.active_textbox)
+            self.shape_start_x, self.shape_start_y = event.x, event.y
+            self.active_textbox = self.canvas.create_rectangle(
+                event.x, event.y, event.x, event.y, outline=self.drawing_color, width=self.line_width)
+
+        elif self.current_shape and not self.is_eraser:
             self.shape_start_x, self.shape_start_y = event.x, event.y
             if self.current_shape == "line":
                 self.shape_id = self.canvas.create_line(event.x, event.y, event.x, event.y, fill=self.drawing_color, width=self.line_width)
@@ -39,6 +50,8 @@ class WhiteboardLogic:
                 line = self.canvas.create_line(self.prev_x, self.prev_y, current_x, current_y, fill=self.canvas["bg"], width=self.line_width, capstyle=tk.ROUND, smooth=True)
                 self.eraser_lines.append(line)
                 self.prev_x, self.prev_y = current_x, current_y
+            elif self.current_shape == "text":
+                self.canvas.coords(self.active_textbox, self.shape_start_x, self.shape_start_y, event.x, event.y)
             elif self.current_shape:
                 if self.shape_id:
                     self.canvas.delete(self.shape_id)
@@ -55,9 +68,55 @@ class WhiteboardLogic:
 
     def stop_drawing(self, event):
         self.is_drawing = False
+        if self.current_shape == "text":
+            self.create_textbox(self.shape_start_x, self.shape_start_y, event.x, event.y)
         self.shape_start_x = None
         self.shape_start_y = None
         self.shape_id = None
+
+    def create_textbox(self, x1, y1, x2, y2):
+        self.textbox_window = tk.Toplevel(self.root)
+        self.textbox_window.overrideredirect(True)
+        self.textbox_window.geometry(f"{abs(x2 - x1)}x{abs(y2 - y1)}+{min(x1, x2)}+{min(y1, y2)}")
+
+        # Define and store the font size based on the dimensions of the textbox
+        self.font_size = int(abs(y2 - y1) * 0.1)  # Adjust 0.7 to fit your needs
+        
+        # Create the Text widget with the defined font size
+        self.textbox = tk.Text(self.textbox_window, bg=self.canvas["bg"], fg=self.drawing_color, wrap="word", font=("Arial", self.font_size))
+        self.textbox.pack(fill="both", expand=True)
+        self.textbox.focus_set()
+        
+        # Bind Escape and Return keys to add text to canvas
+        self.textbox_window.bind("<Escape>", self.add_text_to_canvas)
+        #self.textbox_window.bind("<Return>", self.add_text_to_canvas)
+
+
+    def add_text_to_canvas(self, event=None):
+        if self.textbox_window:
+            text_content = self.textbox.get("1.0", "end-1c")
+            self.textbox_window.destroy()
+            self.textbox_window = None
+
+            if text_content:
+                # Calculate the center of the rectangle for text placement
+                x1, y1, x2, y2 = self.canvas.coords(self.active_textbox)
+
+                # Draw the text on the canvas with the exact same font size as the Text widget
+                self.canvas.create_text(
+                    (x1 + x2) / 2, (y1 + y2) / 2,
+                    text=text_content, fill=self.drawing_color, anchor="center", font=("Arial", self.font_size)
+                )
+
+                # Remove the rectangle used for text placement
+                if self.active_textbox:
+                    self.canvas.delete(self.active_textbox)
+
+        self.current_shape = None
+        self.active_textbox = None
+        self.shape_start_x = None
+        self.shape_start_y = None
+
 
     def change_line_width(self, value):
         self.line_width = int(float(value))
