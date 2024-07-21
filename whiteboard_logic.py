@@ -22,6 +22,8 @@ class WhiteboardLogic:
         self.active_textbox = None
         self.textbox_window = None
         self.textbox = None  # Added to store reference to the text widget
+        self.font_size = 12  # Default font size
+        self.text_color = "black"  # Default text color
 
     def start_drawing(self, event):
         self.is_drawing = True
@@ -79,18 +81,12 @@ class WhiteboardLogic:
         self.textbox_window.overrideredirect(True)
         self.textbox_window.geometry(f"{abs(x2 - x1)}x{abs(y2 - y1)}+{min(x1, x2)}+{min(y1, y2)}")
 
-        # Define and store the font size based on the dimensions of the textbox
-        self.font_size = int(abs(y2 - y1) * 0.1)  # Adjust 0.7 to fit your needs
-        
-        # Create the Text widget with the defined font size
-        self.textbox = tk.Text(self.textbox_window, bg=self.canvas["bg"], fg=self.drawing_color, wrap="word", font=("Arial", self.font_size))
+        self.font_size = self.font_size_var.get() if self.font_size_var else 12
+
+        self.textbox = tk.Text(self.textbox_window, bg=self.canvas["bg"], fg=self.text_color, wrap="word", font=("Arial", self.font_size))
         self.textbox.pack(fill="both", expand=True)
         self.textbox.focus_set()
-        
-        # Bind Escape and Return keys to add text to canvas
         self.textbox_window.bind("<Escape>", self.add_text_to_canvas)
-        #self.textbox_window.bind("<Return>", self.add_text_to_canvas)
-
 
     def add_text_to_canvas(self, event=None):
         if self.textbox_window:
@@ -99,16 +95,12 @@ class WhiteboardLogic:
             self.textbox_window = None
 
             if text_content:
-                # Calculate the center of the rectangle for text placement
                 x1, y1, x2, y2 = self.canvas.coords(self.active_textbox)
-
-                # Draw the text on the canvas with the exact same font size as the Text widget
                 self.canvas.create_text(
                     (x1 + x2) / 2, (y1 + y2) / 2,
-                    text=text_content, fill=self.drawing_color, anchor="center", font=("Arial", self.font_size)
+                    text=text_content, fill=self.text_color, anchor="center", font=("Arial", self.font_size)
                 )
 
-                # Remove the rectangle used for text placement
                 if self.active_textbox:
                     self.canvas.delete(self.active_textbox)
 

@@ -20,6 +20,7 @@ class WhiteboardApp(WhiteboardLogic):
         self.controls_frame = tk.Frame(self.root)
         self.controls_frame.pack(side="top", fill="x")
 
+        # Existing widgets
         self.color_button = tk.Button(self.controls_frame, text="Change Color", relief="groove", command=self.change_pen_color)
         self.clear_button = tk.Button(self.controls_frame, text="Clear Canvas", relief="groove", command=self.clear_canvas)
         self.save_button = tk.Button(self.controls_frame, text="Save", relief="groove", command=self.save_canvas)
@@ -53,6 +54,14 @@ class WhiteboardApp(WhiteboardLogic):
         self.line_width_slider.set(self.line_width)
         self.line_width_slider.pack(side="left", padx=5, pady=5, fill="x")
 
+        # Add font size selection widget
+        self.font_size_label = tk.Label(self.controls_frame, text="Font Size:")
+        self.font_size_label.pack(side="left", padx=5, pady=5)
+
+        self.font_size_var = tk.IntVar(value=12)
+        self.font_size_menu = tk.OptionMenu(self.controls_frame, self.font_size_var, *range(8, 73, 2))
+        self.font_size_menu.pack(side="left", padx=5, pady=5)
+
         self.canvas = tk.Canvas(self.root, bg="white")
         self.canvas.pack(fill="both", expand=True)
 
@@ -69,6 +78,7 @@ class WhiteboardApp(WhiteboardLogic):
         color = askcolor()[1]
         if color:
             self.drawing_color = color
+            self.text_color = color  # Update text color with the selected color
             if self.is_eraser:
                 self.toggle_eraser()
 
