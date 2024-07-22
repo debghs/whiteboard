@@ -87,7 +87,6 @@ class WhiteboardLogic:
         self.textbox.pack(fill="both", expand=True)
         self.textbox.focus_set()
         self.textbox_window.bind("<Escape>", self.add_text_to_canvas)
-
     def add_text_to_canvas(self, event=None):
         if self.textbox_window:
             text_content = self.textbox.get("1.0", "end-1c")
@@ -96,19 +95,36 @@ class WhiteboardLogic:
 
             if text_content:
                 x1, y1, x2, y2 = self.canvas.coords(self.active_textbox)
-                self.canvas.create_text(
-                    (x1 + x2) / 2, (y1 + y2) / 2,
-                    text=text_content, fill=self.text_color, anchor="center", font=("Arial", self.font_size)
+                # Calculate the center of the rectangle
+                center_x = (x1 + x2) / 2
+                center_y = (y1 + y2) / 2
+
+                # Calculate the width and height of the rectangle
+                width = abs(x2 - x1)
+                height = abs(y2 - y1)
+
+                # Create text with the same orientation and margin
+                text_item = self.canvas.create_text(
+                    center_x, center_y,
+                    text=text_content, fill=self.text_color, anchor="center", font=("Arial", self.font_size),
+                    width=width  # Set the width to match the textbox width
                 )
 
-                if self.active_textbox:
-                    self.canvas.delete(self.active_textbox)
+                # Delete the outline of the textbox
+                self.canvas.delete(self.active_textbox)
+
+                # Adjust the text item to maintain the same margins
+                bbox = self.canvas.bbox(text_item)
+                text_width = bbox[2] - bbox[0]
+                text_height = bbox[3] - bbox[1]
+                if text_width > width:
+                    scale_factor = width / text_width
+                    self.canvas.scale(text_item, center_x, center_y, scale_factor, 1)
 
         self.current_shape = None
         self.active_textbox = None
         self.shape_start_x = None
         self.shape_start_y = None
-
 
     def change_line_width(self, value):
         self.line_width = int(float(value))
