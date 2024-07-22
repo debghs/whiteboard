@@ -108,6 +108,8 @@ class WhiteboardApp(WhiteboardLogic):
             self.text_widget.config(bg="gray30", fg="white")
             self.update_button_colors("gray30", "white")
             self.dark_mode_button.config(text="Light Mode")
+            self.font_size_label.config(bg="gray20", fg="white")
+            self.font_size_menu.config(bg="gray20", fg="white")
         else:
             self.root.config(bg="white")
             self.canvas.config(bg="white")
@@ -117,6 +119,8 @@ class WhiteboardApp(WhiteboardLogic):
             self.text_widget.config(bg="white", fg="black")
             self.update_button_colors("white", "black")
             self.dark_mode_button.config(text="Dark Mode")
+            self.font_size_label.config(bg="white", fg="black")
+            self.font_size_menu.config(bg="white", fg="black")
 
         self.update_eraser_lines_color()
 
