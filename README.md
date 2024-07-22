@@ -27,7 +27,11 @@ The project is structured into three main files:
 
    ```cd whiteboard-app```
 
-3. Run the application:
+3. Install the required dependencies:
+
+   ```pip install -r requirements.txt
+
+4. Run the application:
 
    ```python main.py```
 
