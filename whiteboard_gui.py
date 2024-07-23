@@ -11,8 +11,8 @@ class WhiteboardApp(WhiteboardLogic):
         self.root.title("Whiteboard")
         self.root.geometry("1050x600+150+50")
         self.root.resizable(True, True)
-        #icon_img = PhotoImage(file="assets/icon.png")  commenting out for the first github actions release
-        #self.root.iconphoto(False, icon_img)
+        icon_img = PhotoImage(file="assets/icon.png")
+        self.root.iconphoto(False, icon_img)
         self.create_widgets()
         self.update_cursor() 
 
