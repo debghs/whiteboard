@@ -1,6 +1,5 @@
 import tkinter as tk
 import pickle
-import traceback
 
 class WhiteboardLogic:
     def __init__(self, root):
@@ -22,10 +21,9 @@ class WhiteboardLogic:
         self.text_boxes = []
         self.active_textbox = None
         self.textbox_window = None
-        self.textbox = None
-        self.font_size = 12
-        self.text_color = "black"
-        self.font_size_var = None
+        self.textbox = None  # Added to store reference to the text widget
+        self.font_size = 12  # Default font size
+        self.text_color = "black"  # Default text color
 
     def start_drawing(self, event):
         self.is_drawing = True
@@ -98,19 +96,25 @@ class WhiteboardLogic:
 
             if text_content:
                 x1, y1, x2, y2 = self.canvas.coords(self.active_textbox)
+                # Calculate the center of the rectangle
                 center_x = (x1 + x2) / 2
                 center_y = (y1 + y2) / 2
+
+                # Calculate the width and height of the rectangle
                 width = abs(x2 - x1)
                 height = abs(y2 - y1)
 
+                # Create text with the same orientation and margin
                 text_item = self.canvas.create_text(
                     center_x, center_y,
                     text=text_content, fill=self.text_color, anchor="center", font=("Arial", self.font_size),
-                    width=width
+                    width=width  # Set the width to match the textbox width
                 )
 
+                # Delete the outline of the textbox
                 self.canvas.delete(self.active_textbox)
 
+                # Adjust the text item to maintain the same margins
                 bbox = self.canvas.bbox(text_item)
                 text_width = bbox[2] - bbox[0]
                 text_height = bbox[3] - bbox[1]
@@ -122,7 +126,6 @@ class WhiteboardLogic:
         self.active_textbox = None
         self.shape_start_x = None
         self.shape_start_y = None
-        self.update_cursor()  # Update the cursor after adding text to the canvas
 
     def change_line_width(self, value):
         self.line_width = int(float(value))
@@ -131,6 +134,7 @@ class WhiteboardLogic:
     def toggle_dark_mode(self):
         self.is_dark_mode = not self.is_dark_mode
         self.update_theme()
+        self.update_eraser_lines()  # Update eraser lines color when mode is toggled
 
     def toggle_eraser(self):
         if self.is_eraser:
@@ -165,35 +169,32 @@ class WhiteboardLogic:
                 self.cursor_circle_id = None
 
     def _save_canvas(self, file_path):
-        try:
-            items = self.canvas.find_all()
-            canvas_data = []
+        items = self.canvas.find_all()
+        canvas_data = []
 
-            for item in items:
-                item_type = self.canvas.type(item)
-                item_coords = self.canvas.coords(item)
-                item_options = self.canvas.itemconfig(item)
-                item_tags = self.canvas.gettags(item)
+        for item in items:
+            item_type = self.canvas.type(item)
+            item_coords = self.canvas.coords(item)
+            item_options = self.canvas.itemconfig(item)
+            item_tags = self.canvas.gettags(item)
 
-                item_data = {
-                    "type": item_type,
-                    "coords": item_coords,
-                    "options": {key: val[-1] for key, val in item_options.items()},
-                    "tags": item_tags
-                }
-                canvas_data.append(item_data)
+            item_data = {
+                "type": item_type,
+                "coords": item_coords,
+                "options": {key: val[-1] for key, val in item_options.items()},
+                "tags": item_tags
+            }
+            canvas_data.append(item_data)
 
-            with open(file_path, "wb") as f:
-                pickle.dump(canvas_data, f)
-        except Exception as e:
-            print(f"Error saving canvas: {e}")
-            traceback.print_exc()
+        with open(file_path, "wb") as f:
+            pickle.dump(canvas_data, f)
 
     def _load_canvas(self, file_path):
-        try:
-            self.canvas.delete("all")
-            with open(file_path, "rb") as f:
-                canvas_data = pickle.load(f)
+        self.canvas.delete("all")
+        self.eraser_lines.clear()
+
+        with open(file_path, "rb") as f:
+            canvas_data = pickle.load(f)
 
             for item_data in canvas_data:
                 item_type = item_data["type"]
@@ -212,9 +213,8 @@ class WhiteboardLogic:
 
                 if "eraser" in item_tags:
                     self.eraser_lines.append(new_item)
-        except Exception as e:
-            print(f"Error loading canvas: {e}")
-            traceback.print_exc()
+
+        self.update_eraser_lines()  # Ensure eraser lines are updated after loading the canvas
 
     def save_canvas(self, file_path):
         self._save_canvas(file_path)
@@ -236,3 +236,8 @@ class WhiteboardLogic:
         self.current_shape = None
         if self.is_eraser:
             self.toggle_eraser()
+
+    def update_eraser_lines(self):
+        bg_color = self.canvas["bg"]
+        for line in self.eraser_lines:
+            self.canvas.itemconfig(line, fill=bg_color)
