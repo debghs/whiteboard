@@ -52,5 +52,5 @@ The project is structured into three main files:
 
 ## Note 
 There are some bugs in this version:
-- The saved pickle files lose all the data when reopened using the app.
+- The saved pickle files lose all the data when reopened using the app.(FIXED)
 - The text insertion probably needs some tuning.
