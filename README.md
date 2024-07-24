@@ -11,6 +11,8 @@ whiteboard is a simple drawing application built using Tkinter in Python. It all
 - Saving and loading drawings in pickle format
 - Inserting text inside dynamically shaped custom textboxes
 - Taking notes alongside drawings
+- Zoom In and Out while drawing
+- Infinitely scrollable canvas
 
 ## File Structure
 The project is structured into three main files:
@@ -49,8 +51,12 @@ The project is structured into three main files:
 - The text would have the color the ink had previously.
 - To choose the font size of the text input, adjust the "Font Size:" before inserting the text.
 - Take notes alongside drawings by clicking the "Notes" button.
+- Press ```Ctrl-Shift-+``` to Zoom In and ```Ctrl-Shift-*``` to Zoom Out.
+- Use the sliders to navigate across the canvas.
+- Press the "Home" button to return to the original camvas coordinates(in case you get lost).
 
 ## Note 
 There are some bugs in this version:
 - The saved pickle files lose all the data when reopened using the app.(FIXED)
 - The text insertion probably needs some tuning.
+- The home button is glitching.
