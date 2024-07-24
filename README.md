@@ -29,7 +29,7 @@ The project is structured into three main files:
 
 3. Install the required dependencies:
 
-   ```pip install -r requirements.txt
+   ```pip install -r requirements.txt```
 
 4. Run the application:
 
