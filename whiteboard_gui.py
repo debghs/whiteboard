@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter.colorchooser import askcolor
-from tkinter import filedialog, PhotoImage, font
+from tkinter import filedialog, PhotoImage
+from tkinter.font import Font, families
 from whiteboard_logic import WhiteboardLogic
 import os
 
@@ -62,18 +63,17 @@ class WhiteboardApp(WhiteboardLogic):
         self.font_size_menu = tk.OptionMenu(self.controls_frame, self.font_size_var, *range(8, 73, 2))
         self.font_size_menu.pack(side="left", padx=5, pady=5)
 
-        self.canvas = tk.Canvas(self.root, bg="white")
-        self.canvas.pack(fill="both", expand=True)
-
-        # Add font selection widget
+        # Add font family selection widget using tkinter.font.Font
+        font_families = families()
         self.font_family_label = tk.Label(self.controls_frame, text="Font Family:")
         self.font_family_label.pack(side="left", padx=5, pady=5)
 
-        fonts = list(font.families())
-        fonts.sort()
         self.font_family_var = tk.StringVar(value="Arial")  # Default font family
-        self.font_family_menu = tk.OptionMenu(self.controls_frame, self.font_family_var, *fonts, command=self.change_font_family)
+        self.font_family_menu = tk.OptionMenu(self.controls_frame, self.font_family_var, *font_families, command=self.change_font_family_selection)
         self.font_family_menu.pack(side="left", padx=5, pady=5)
+
+        self.canvas = tk.Canvas(self.root, bg="white")
+        self.canvas.pack(fill="both", expand=True)
 
         self.canvas.bind("<Button-1>", self.start_drawing)
         self.canvas.bind("<B1-Motion>", self.draw)
@@ -120,6 +120,8 @@ class WhiteboardApp(WhiteboardLogic):
             self.dark_mode_button.config(text="Light Mode")
             self.font_size_label.config(bg="gray20", fg="white")
             self.font_size_menu.config(bg="gray20", fg="white")
+            self.font_family_label.config(bg="gray20", fg="white")
+            self.font_family_menu.config(bg="gray20", fg="white")
         else:
             self.root.config(bg="white")
             self.canvas.config(bg="white")
@@ -131,6 +133,8 @@ class WhiteboardApp(WhiteboardLogic):
             self.dark_mode_button.config(text="Dark Mode")
             self.font_size_label.config(bg="white", fg="black")
             self.font_size_menu.config(bg="white", fg="black")
+            self.font_family_label.config(bg="white", fg="black")
+            self.font_family_menu.config(bg="white", fg="black")
 
         self.update_eraser_lines_color()
 
@@ -148,5 +152,6 @@ class WhiteboardApp(WhiteboardLogic):
         for line in self.eraser_lines:
             self.canvas.itemconfig(line, fill=self.canvas["bg"])
 
-def change_font_family(self, font_family):
-    self.change_font_family(font_family) 
+    def change_font_family_selection(self, event=None):
+        font_family = self.font_family_var.get()
+        self.change_font_family(font_family)
