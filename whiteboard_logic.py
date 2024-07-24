@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import font
 import pickle
 
 class WhiteboardLogic:
@@ -24,6 +25,7 @@ class WhiteboardLogic:
         self.textbox = None  # Added to store reference to the text widget
         self.font_size = 12  # Default font size
         self.text_color = "black"  # Default text color
+        self.font_family = "Arial"  # Default font family
 
     def start_drawing(self, event):
         self.is_drawing = True
@@ -83,14 +85,16 @@ class WhiteboardLogic:
 
         self.font_size = self.font_size_var.get() if self.font_size_var else 12
 
-        self.textbox = tk.Text(self.textbox_window, bg=self.canvas["bg"], fg=self.text_color, wrap="word", font=("Arial", self.font_size))
+        # Use font.Font to set the desired font family
+        text_font = font.Font(family=self.font_family, size=self.font_size)
+        self.textbox = tk.Text(self.textbox_window, bg=self.canvas["bg"], fg=self.text_color, wrap="word", font=text_font)
         self.textbox.pack(fill="both", expand=True)
         self.textbox.focus_set()
         self.textbox_window.bind("<Escape>", self.add_text_to_canvas)
-        
+
     def add_text_to_canvas(self, event=None):
         if self.textbox_window:
-            text_content = self.textbox.get("1.0", "end-1c").strip()  # Strip any whitespace
+            text_content = self.textbox.get("1.0", "end-1c").strip()
 
             if text_content:
                 x1, y1, x2, y2 = self.canvas.coords(self.active_textbox)
@@ -99,13 +103,15 @@ class WhiteboardLogic:
                 text_x = min(x1, x2)
                 text_y = min(y1, y2)
 
-                # Create text with the same orientation and margin
+                # Use font.Font to set the desired font family
+                text_font = font.Font(family=self.font_family, size=self.font_size)
+
+                # Create text with the selected font family
                 text_item = self.canvas.create_text(
                     text_x, text_y,
-                    text=text_content, fill=self.text_color, anchor="nw", font=("Arial", self.font_size)
+                    text=text_content, fill=self.text_color, anchor="nw", font=text_font
                 )
 
-            # Delete the outline of the textbox
             self.canvas.delete(self.active_textbox)
 
         if self.textbox_window:
@@ -116,7 +122,7 @@ class WhiteboardLogic:
         self.active_textbox = None
         self.shape_start_x = None
         self.shape_start_y = None
-
+        
     def change_line_width(self, value):
         self.line_width = int(float(value))
         self.update_cursor()
@@ -231,3 +237,6 @@ class WhiteboardLogic:
         bg_color = self.canvas["bg"]
         for line in self.eraser_lines:
             self.canvas.itemconfig(line, fill=bg_color)
+
+    def change_font_family(self, font_family):
+        self.font_family = font_family

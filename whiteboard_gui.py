@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter.colorchooser import askcolor
-from tkinter import filedialog, PhotoImage
+from tkinter import filedialog, PhotoImage, font
 from whiteboard_logic import WhiteboardLogic
 import os
 
@@ -14,7 +14,7 @@ class WhiteboardApp(WhiteboardLogic):
         icon_img = PhotoImage(file="assets/icon.png")
         self.root.iconphoto(False, icon_img)
         self.create_widgets()
-        self.update_cursor() 
+        self.update_cursor()
 
     def create_widgets(self):
         self.controls_frame = tk.Frame(self.root)
@@ -64,6 +64,16 @@ class WhiteboardApp(WhiteboardLogic):
 
         self.canvas = tk.Canvas(self.root, bg="white")
         self.canvas.pack(fill="both", expand=True)
+
+        # Add font selection widget
+        self.font_family_label = tk.Label(self.controls_frame, text="Font Family:")
+        self.font_family_label.pack(side="left", padx=5, pady=5)
+
+        fonts = list(font.families())
+        fonts.sort()
+        self.font_family_var = tk.StringVar(value="Arial")  # Default font family
+        self.font_family_menu = tk.OptionMenu(self.controls_frame, self.font_family_var, *fonts, command=self.change_font_family)
+        self.font_family_menu.pack(side="left", padx=5, pady=5)
 
         self.canvas.bind("<Button-1>", self.start_drawing)
         self.canvas.bind("<B1-Motion>", self.draw)
@@ -137,3 +147,6 @@ class WhiteboardApp(WhiteboardLogic):
     def update_eraser_lines_color(self):
         for line in self.eraser_lines:
             self.canvas.itemconfig(line, fill=self.canvas["bg"])
+
+def change_font_family(self, font_family):
+    self.change_font_family(font_family) 
