@@ -90,37 +90,27 @@ class WhiteboardLogic:
         
     def add_text_to_canvas(self, event=None):
         if self.textbox_window:
-            text_content = self.textbox.get("1.0", "end-1c")
-            self.textbox_window.destroy()
-            self.textbox_window = None
+            text_content = self.textbox.get("1.0", "end-1c").strip()  # Strip any whitespace
 
             if text_content:
                 x1, y1, x2, y2 = self.canvas.coords(self.active_textbox)
-                # Calculate the center of the rectangle
-                center_x = (x1 + x2) / 2
-                center_y = (y1 + y2) / 2
 
-                # Calculate the width and height of the rectangle
-                width = abs(x2 - x1)
-                height = abs(y2 - y1)
+                # Calculate the actual coordinates of the text box
+                text_x = min(x1, x2)
+                text_y = min(y1, y2)
 
                 # Create text with the same orientation and margin
                 text_item = self.canvas.create_text(
-                    center_x, center_y,
-                    text=text_content, fill=self.text_color, anchor="center", font=("Arial", self.font_size),
-                    width=width  # Set the width to match the textbox width
+                    text_x, text_y,
+                    text=text_content, fill=self.text_color, anchor="nw", font=("Arial", self.font_size)
                 )
 
-                # Delete the outline of the textbox
-                self.canvas.delete(self.active_textbox)
+            # Delete the outline of the textbox
+            self.canvas.delete(self.active_textbox)
 
-                # Adjust the text item to maintain the same margins
-                bbox = self.canvas.bbox(text_item)
-                text_width = bbox[2] - bbox[0]
-                text_height = bbox[3] - bbox[1]
-                if text_width > width:
-                    scale_factor = width / text_width
-                    self.canvas.scale(text_item, center_x, center_y, scale_factor, 1)
+        if self.textbox_window:
+            self.textbox_window.destroy()
+            self.textbox_window = None
 
         self.current_shape = None
         self.active_textbox = None
