@@ -29,54 +29,71 @@ class WhiteboardLogic:
 
     def start_drawing(self, event):
         self.is_drawing = True
-        self.prev_x, self.prev_y = event.x, event.y
-
+        self.prev_x, self.prev_y = self.canvas.canvasx(event.x), self.canvas.canvasy(event.y)
         if self.current_shape == "text":
-            if self.active_textbox:
-                self.canvas.delete(self.active_textbox)
-            self.shape_start_x, self.shape_start_y = event.x, event.y
-            self.active_textbox = self.canvas.create_rectangle(
-                event.x, event.y, event.x, event.y, outline=self.drawing_color, width=self.line_width)
-
+            self.start_text_drawing(event)
         elif self.current_shape and not self.is_eraser:
-            self.shape_start_x, self.shape_start_y = event.x, event.y
-            if self.current_shape == "line":
-                self.shape_id = self.canvas.create_line(event.x, event.y, event.x, event.y, fill=self.drawing_color, width=self.line_width)
-            elif self.current_shape == "rectangle":
-                self.shape_id = self.canvas.create_rectangle(event.x, event.y, event.x, event.y, outline=self.drawing_color, width=self.line_width)
-            elif self.current_shape == "circle":
-                self.shape_id = self.canvas.create_oval(event.x, event.y, event.x, event.y, outline=self.drawing_color, width=self.line_width)
+            self.start_shape_drawing(event)
 
     def draw(self, event):
         if self.is_drawing:
+            current_x, current_y = self.canvas.canvasx(event.x), self.canvas.canvasy(event.y)
             if self.is_eraser:
-                current_x, current_y = event.x, event.y
-                line = self.canvas.create_line(self.prev_x, self.prev_y, current_x, current_y, fill=self.canvas["bg"], width=self.line_width, capstyle=tk.ROUND, smooth=True, tags="eraser")
-                self.eraser_lines.append(line)
-                self.prev_x, self.prev_y = current_x, current_y
+                self.draw_eraser(current_x, current_y)
             elif self.current_shape == "text":
-                self.canvas.coords(self.active_textbox, self.shape_start_x, self.shape_start_y, event.x, event.y)
+                self.update_textbox(current_x, current_y)
             elif self.current_shape:
-                if self.shape_id:
-                    self.canvas.delete(self.shape_id)
-                if self.current_shape == "line":
-                    self.shape_id = self.canvas.create_line(self.shape_start_x, self.shape_start_y, event.x, event.y, fill=self.drawing_color, width=self.line_width)
-                elif self.current_shape == "rectangle":
-                    self.shape_id = self.canvas.create_rectangle(self.shape_start_x, self.shape_start_y, event.x, event.y, outline=self.drawing_color, width=self.line_width)
-                elif self.current_shape == "circle":
-                    self.shape_id = self.canvas.create_oval(self.shape_start_x, self.shape_start_y, event.x, event.y, outline=self.drawing_color, width=self.line_width)
+                self.update_shape(current_x, current_y)
             else:
-                current_x, current_y = event.x, event.y
-                self.canvas.create_line(self.prev_x, self.prev_y, current_x, current_y, fill=self.drawing_color, width=self.line_width, capstyle=tk.ROUND, smooth=True)
-                self.prev_x, self.prev_y = current_x, current_y
+                self.draw_freehand(current_x, current_y)
 
     def stop_drawing(self, event):
         self.is_drawing = False
         if self.current_shape == "text":
-            self.create_textbox(self.shape_start_x, self.shape_start_y, event.x, event.y)
+            self.stop_text_drawing(event)
+
+    # ... (new functions added below)
+
+    def start_text_drawing(self, event):
+        self.shape_start_x, self.shape_start_y = event.x, event.y
+        self.active_textbox = self.canvas.create_rectangle(event.x, event.y, event.x, event.y, outline=self.drawing_color, width=self.line_width)
+
+    def update_textbox(self, current_x, current_y):
+        self.canvas.coords(self.active_textbox, self.shape_start_x, self.shape_start_y, current_x, current_y)
+
+    def stop_text_drawing(self, event):
+        self.create_textbox(self.shape_start_x, self.shape_start_y, event.x, event.y)
         self.shape_start_x = None
         self.shape_start_y = None
         self.shape_id = None
+
+    def start_shape_drawing(self, event):
+        self.shape_start_x, self.shape_start_y = event.x, event.y
+        if self.current_shape == "line":
+            self.shape_id = self.canvas.create_line(event.x, event.y, event.x, event.y, fill=self.drawing_color, width=self.line_width)
+        elif self.current_shape == "rectangle":
+            self.shape_id = self.canvas.create_rectangle(event.x, event.y, event.x, event.y, outline=self.drawing_color, width=self.line_width)
+        elif self.current_shape == "circle":
+            self.shape_id = self.canvas.create_oval(event.x, event.y, event.x, event.y, outline=self.drawing_color, width=self.line_width)
+
+    def update_shape(self, current_x, current_y):
+        if self.shape_id:
+            self.canvas.delete(self.shape_id)
+        if self.current_shape == "line":
+            self.shape_id = self.canvas.create_line(self.shape_start_x, self.shape_start_y, current_x, current_y, fill=self.drawing_color, width=self.line_width)
+        elif self.current_shape == "rectangle":
+            self.shape_id = self.canvas.create_rectangle(self.shape_start_x, self.shape_start_y, current_x, current_y, outline=self.drawing_color, width=self.line_width)
+        elif self.current_shape == "circle":
+            self.shape_id = self.canvas.create_oval(self.shape_start_x, self.shape_start_y, current_x, current_y, outline=self.drawing_color, width=self.line_width)
+
+    def draw_eraser(self, current_x, current_y):
+        line = self.canvas.create_line(self.prev_x, self.prev_y, current_x, current_y, fill=self.canvas["bg"], width=self.line_width, capstyle=tk.ROUND, smooth=True, tags="eraser")
+        self.eraser_lines.append(line)
+        self.prev_x, self.prev_y = current_x, current_y
+
+    def draw_freehand(self, current_x, current_y):
+        self.canvas.create_line(self.prev_x, self.prev_y, current_x, current_y, fill=self.drawing_color, width=self.line_width, capstyle=tk.ROUND, smooth=True)
+        self.prev_x, self.prev_y = current_x, current_y
 
     def create_textbox(self, x1, y1, x2, y2):
         self.textbox_window = tk.Toplevel(self.root)

@@ -16,6 +16,11 @@ class WhiteboardApp(WhiteboardLogic):
         self.root.iconphoto(False, icon_img)
         self.create_widgets()
         self.update_cursor()
+        self.root.bind("<Control-+>", self.zoom_in)
+        self.root.bind("<Control-*>", self.zoom_out)
+        self.initial_scroll_x = 0
+        self.initial_scroll_y = 0
+        
 
     def create_widgets(self):
         self.controls_frame = tk.Frame(self.root)
@@ -47,6 +52,9 @@ class WhiteboardApp(WhiteboardLogic):
         self.rectangle_button.pack(side="left", padx=5, pady=5)
         self.circle_button.pack(side="left", padx=5, pady=5)
         self.text_button.pack(side="left", padx=5, pady=5)
+        self.home_button = tk.Button(self.controls_frame, text="Home", relief="groove", command=self.reset_view)
+        self.home_button.pack(side="left", padx=5, pady=5)
+
 
         self.line_width_label = tk.Label(self.controls_frame, text="Width:")
         self.line_width_label.pack(side="left", padx=5, pady=5)
@@ -72,7 +80,14 @@ class WhiteboardApp(WhiteboardLogic):
         self.font_family_menu = tk.OptionMenu(self.controls_frame, self.font_family_var, *font_families, command=self.change_font_family_selection)
         self.font_family_menu.pack(side="left", padx=5, pady=5)
 
-        self.canvas = tk.Canvas(self.root, bg="white")
+        self.canvas = tk.Canvas(self.root, bg="white", scrollregion=(0, 0, 10000, 10000))
+        self.scroll_x = tk.Scrollbar(self.root, orient="horizontal", command=self.canvas.xview)
+        self.scroll_y = tk.Scrollbar(self.root, orient="vertical", command=self.canvas.yview)
+        self.canvas.configure(xscrollcommand=self.scroll_x.set, yscrollcommand=self.scroll_y.set)
+        self.scroll_x.pack(side="bottom", fill="x")
+        self.scroll_y.pack(side="right", fill="y")
+        self.canvas.pack(side="left", fill="both", expand=True)
+
         self.canvas.pack(fill="both", expand=True)
 
         self.canvas.bind("<Button-1>", self.start_drawing)
@@ -81,8 +96,28 @@ class WhiteboardApp(WhiteboardLogic):
 
         self.text_widget = tk.Text(self.root, height=6, width=120)
         self.text_widget.pack_forget()
-
+        
         self.update_theme()
+
+    def zoom_in(self, event=None):
+        self.canvas.scale("all", 0, 0, 1.1, 1.1)
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+        self.scroll_x.config(command=self.canvas.xview)
+        self.scroll_y.config(command=self.canvas.yview)
+
+    def zoom_out(self, event=None):
+        self.canvas.scale("all", 0, 0, 0.9, 0.9)
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+        self.scroll_x.config(command=self.canvas.xview)
+        self.scroll_y.config(command=self.canvas.yview)
+
+    def reset_view(self):
+        self.canvas.xview_moveto(self.initial_scroll_x)
+        self.canvas.yview_moveto(self.initial_scroll_y)
+        self.canvas.scale("all", 0, 0, 1, 1)
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+        self.scroll_x.config(command=self.canvas.xview)
+        self.scroll_y.config(command=self.canvas.yview)
 
     def change_pen_color(self):
         color = askcolor()[1]
@@ -118,10 +153,12 @@ class WhiteboardApp(WhiteboardLogic):
             self.text_widget.config(bg="gray30", fg="white")
             self.update_button_colors("gray30", "white")
             self.dark_mode_button.config(text="Light Mode")
-            self.font_size_label.config(bg="gray20", fg="white")
-            self.font_size_menu.config(bg="gray20", fg="white")
-            self.font_family_label.config(bg="gray20", fg="white")
-            self.font_family_menu.config(bg="gray20", fg="white")
+            self.font_size_label.config(bg="gray30", fg="white")
+            self.font_size_menu.config(bg="gray30", fg="white")
+            self.font_family_label.config(bg="gray30", fg="white")
+            self.font_family_menu.config(bg="gray30", fg="white")
+            self.home_button.config(bg="gray30", fg="white")
+            
         else:
             self.root.config(bg="white")
             self.canvas.config(bg="white")
@@ -135,6 +172,8 @@ class WhiteboardApp(WhiteboardLogic):
             self.font_size_menu.config(bg="white", fg="black")
             self.font_family_label.config(bg="white", fg="black")
             self.font_family_menu.config(bg="white", fg="black")
+            self.home_button.config(bg="white", fg="black")
+
 
         self.update_eraser_lines_color()
 
