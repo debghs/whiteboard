@@ -18,6 +18,7 @@ class WhiteboardApp(WhiteboardLogic):
         self.update_cursor()
         self.root.bind("<Control-+>", self.zoom_in)
         self.root.bind("<Control-*>", self.zoom_out)
+        self.initial_zoom_level = 1
         self.initial_scroll_x = 0
         self.initial_scroll_y = 0
         
@@ -101,23 +102,24 @@ class WhiteboardApp(WhiteboardLogic):
 
     def zoom_in(self, event=None):
         self.canvas.scale("all", 0, 0, 1.1, 1.1)
+        self.initial_zoom_level *= 1.1
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
         self.scroll_x.config(command=self.canvas.xview)
         self.scroll_y.config(command=self.canvas.yview)
 
     def zoom_out(self, event=None):
         self.canvas.scale("all", 0, 0, 0.9, 0.9)
+        self.initial_zoom_level *= 0.9
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
         self.scroll_x.config(command=self.canvas.xview)
         self.scroll_y.config(command=self.canvas.yview)
 
     def reset_view(self):
+        self.canvas.scale("all", 0, 0, 1/self.initial_zoom_level, 1/self.initial_zoom_level)
+        self.canvas.configure(scrollregion=(0, 0, 10000, 10000))
         self.canvas.xview_moveto(self.initial_scroll_x)
         self.canvas.yview_moveto(self.initial_scroll_y)
-        self.canvas.scale("all", 0, 0, 1, 1)
-        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
-        self.scroll_x.config(command=self.canvas.xview)
-        self.scroll_y.config(command=self.canvas.yview)
+        self.initial_zoom_level = 1
 
     def change_pen_color(self):
         color = askcolor()[1]
