@@ -58,6 +58,6 @@ The project is structured into three main files:
 ## Note 
 There are some bugs in this version:
 - The saved pickle files lose all the data when reopened using the app.(FIXED)
-- The text insertion probably needs some tuning.
+- The text insertion probably needs some tuning.(FIXED)
 - The home button is glitching.(FIXED)
-- The zoom is interfering with the textbox pop-up dimensions, i believe.
+- The zoom is interfering with the textbox pop-up dimensions, i believe.(FIXED)
