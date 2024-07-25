@@ -51,7 +51,7 @@ The project is structured into three main files:
 - The text would have the color the ink had previously.
 - To choose the font size of the text input, adjust the "Font Size:" before inserting the text.
 - Take notes alongside drawings by clicking the "Notes" button.
-- Press ```Ctrl-Shift-+``` to Zoom In and ```Ctrl-Shift-*``` to Zoom Out.
+- Place the cursor on where you would like to zoom and press ```Ctrl-Shift-+``` to Zoom In and ```Ctrl-Shift-*``` to Zoom Out.
 - Use the sliders to navigate across the canvas.
 - Press the "Home" button to return to the original camvas coordinates(in case you get lost).
 
