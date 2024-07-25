@@ -108,6 +108,23 @@ class WhiteboardLogic:
         self.textbox.pack(fill="both", expand=True)
         self.textbox.focus_set()
         self.textbox_window.bind("<Escape>", self.add_text_to_canvas)
+        self.textbox_window.protocol("WM_DELETE_WINDOW", self.on_popup_close)
+        self.textbox_window.bind("<FocusOut>", self.on_popup_focusout)
+
+    # the next two functions return the None.destroy() exception, but i think issok
+    def on_popup_close(self):
+        self.canvas.delete("active_textbox")
+        self.add_text_to_canvas()    # this basically eliminates the need for <ESC> button, but i'll keep it still
+        if self.textbox_window:
+            self.textbox_window.destroy()
+            self.textbox_window = None  # Set to None after destroying
+            
+    def on_popup_focusout(self, event):
+        if self.textbox_window:
+            self.canvas.delete("active_textbox")
+            self.add_text_to_canvas()    # this basically eliminates the need for <ESC> button, but i'll keep it still
+            self.textbox_window.destroy()
+            self.textbox_window = None  # Set to None after destroying
 
     def add_text_to_canvas(self, event=None):
         if self.textbox_window:
