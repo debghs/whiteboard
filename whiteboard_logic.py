@@ -52,8 +52,6 @@ class WhiteboardLogic:
         if self.current_shape == "text":
             self.stop_text_drawing(event)
 
-    # ... (new functions added below)
-
     def start_text_drawing(self, event):
         self.shape_start_x, self.shape_start_y = event.x, event.y
         self.active_textbox = self.canvas.create_rectangle(event.x, event.y, event.x, event.y, outline=self.drawing_color, width=self.line_width)
@@ -187,7 +185,8 @@ class WhiteboardLogic:
         if self.canvas.winfo_containing(event.x_root, event.y_root) == self.canvas:
             if self.cursor_circle_id:
                 self.canvas.delete(self.cursor_circle_id)
-            x, y = event.x, event.y
+            x = self.canvas.canvasx(event.x)
+            y = self.canvas.canvasy(event.y)
             radius = self.line_width / 2
             self.cursor_circle_id = self.canvas.create_oval(
                 x - radius, y - radius, x + radius, y + radius,
@@ -196,7 +195,7 @@ class WhiteboardLogic:
         else:
             if self.cursor_circle_id:
                 self.canvas.delete(self.cursor_circle_id)
-                self.cursor_circle_id = None
+            self.cursor_circle_id = None
 
     def _save_canvas(self, file_path):
         items = self.canvas.find_all()
