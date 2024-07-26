@@ -26,6 +26,7 @@ class WhiteboardLogic:
         self.font_size = 12  # Default font size
         self.text_color = "black"  # Default text color
         self.font_family = "Arial"  # Default font family
+        self.zoom_scale = 1.0 
 
     def start_drawing(self, event):
         self.is_drawing = True
@@ -53,8 +54,9 @@ class WhiteboardLogic:
             self.stop_text_drawing(event)
 
     def start_text_drawing(self, event):
-        self.shape_start_x, self.shape_start_y = event.x, event.y
-        self.active_textbox = self.canvas.create_rectangle(event.x, event.y, event.x, event.y, outline=self.drawing_color, width=self.line_width)
+        self.shape_start_x, self.shape_start_y = self.canvas.canvasx(event.x) / self.zoom_scale, self.canvas.canvasy(event.y) / self.zoom_scale
+        self.active_textbox = self.canvas.create_rectangle(self.shape_start_x, self.shape_start_y, self.shape_start_x, self.shape_start_y, outline=self.drawing_color, width=self.line_width)
+
 
     def update_textbox(self, current_x, current_y):
         self.canvas.coords(self.active_textbox, self.shape_start_x, self.shape_start_y, current_x, current_y)
@@ -96,11 +98,16 @@ class WhiteboardLogic:
     def create_textbox(self, x1, y1, x2, y2):
         self.textbox_window = tk.Toplevel(self.root)
         self.textbox_window.overrideredirect(True)
-        self.textbox_window.geometry(f"{abs(x2 - x1)}x{abs(y2 - y1)}+{min(x1, x2)}+{min(y1, y2)}")
 
-        self.font_size = self.font_size_var.get() if self.font_size_var else 12
+        # Adjust position and size by the zoom scale
+        width = int(abs(x2 - x1) * self.zoom_scale)
+        height = int(abs(y2 - y1) * self.zoom_scale)
+        pos_x = int(min(x1, x2) * self.zoom_scale)
+        pos_y = int(min(y1, y2) * self.zoom_scale)
 
-        # Use font.Font to set the desired font family
+        self.textbox_window.geometry(f"{width}x{height}+{pos_x}+{pos_y}")
+
+        # Set font and other text properties
         text_font = font.Font(family=self.font_family, size=self.font_size)
         self.textbox = tk.Text(self.textbox_window, bg=self.canvas["bg"], fg=self.text_color, wrap="word", font=text_font)
         self.textbox.pack(fill="both", expand=True)
@@ -131,14 +138,12 @@ class WhiteboardLogic:
             if text_content:
                 x1, y1, x2, y2 = self.canvas.coords(self.active_textbox)
 
-                # Calculate the actual coordinates of the text box
-                text_x = min(x1, x2)
-                text_y = min(y1, y2)
+                # Adjust coordinates by the zoom scale
+                text_x = min(x1, x2) / self.zoom_scale
+                text_y = min(y1, y2) / self.zoom_scale
 
-                # Use font.Font to set the desired font family
                 text_font = font.Font(family=self.font_family, size=self.font_size)
 
-                # Create text with the selected font family
                 text_item = self.canvas.create_text(
                     text_x, text_y,
                     text=text_content, fill=self.text_color, anchor="nw", font=text_font
