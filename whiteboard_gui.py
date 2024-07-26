@@ -55,7 +55,10 @@ class WhiteboardApp(WhiteboardLogic):
         self.text_button.pack(side="left", padx=5, pady=5)
         self.home_button = tk.Button(self.controls_frame, text="Home", relief="groove", command=self.reset_view)
         self.home_button.pack(side="left", padx=5, pady=5)
-
+        self.undo_button = tk.Button(self.controls_frame, text="Undo", relief="groove", command=self.undo)
+        self.undo_button.pack(side="left", padx=5, pady=5)
+        self.redo_button = tk.Button(self.controls_frame, text="Redo", relief="groove", command=self.redo)
+        self.redo_button.pack(side="left", padx=5, pady=5)
 
         self.line_width_label = tk.Label(self.controls_frame, text="Width:")
         self.line_width_label.pack(side="left", padx=5, pady=5)
@@ -175,6 +178,10 @@ class WhiteboardApp(WhiteboardLogic):
             self.font_family_label.config(bg="white", fg="black")
             self.font_family_menu.config(bg="white", fg="black")
             self.home_button.config(bg="white", fg="black")
+        self.undo_button.config(bg="gray30" if self.is_dark_mode else "white", fg="white" if self.is_dark_mode else "black")
+        self.redo_button.config(bg="gray30" if self.is_dark_mode else "white", fg="white" if self.is_dark_mode else "black")
+		
+
 
 
         self.update_eraser_lines_color()

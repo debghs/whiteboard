@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import font
 import pickle
+from PIL import ImageGrab
 
 class WhiteboardLogic:
     def __init__(self, root):
@@ -27,6 +28,10 @@ class WhiteboardLogic:
         self.text_color = "black"  # Default text color
         self.font_family = "Arial"  # Default font family
         self.zoom_scale = 1.0 
+        self.undo_stack = []
+        self.redo_stack = []
+        self.current_snapshot = None
+
 
     def start_drawing(self, event):
         self.is_drawing = True
@@ -35,6 +40,8 @@ class WhiteboardLogic:
             self.start_text_drawing(event)
         elif self.current_shape and not self.is_eraser:
             self.start_shape_drawing(event)
+        self.store_snapshot()
+
 
     def draw(self, event):
         if self.is_drawing:
@@ -52,6 +59,37 @@ class WhiteboardLogic:
         self.is_drawing = False
         if self.current_shape == "text":
             self.stop_text_drawing(event)
+        self.store_snapshot()
+
+    def store_snapshot(self):
+        self.undo_stack.append(self.get_canvas_snapshot())
+        self.redo_stack.clear()
+
+    def get_canvas_snapshot(self):
+        items = self.canvas.find_all()
+        snapshot = []
+        for item in items:
+            item_type = self.canvas.type(item)
+            item_coords = self.canvas.coords(item)
+            item_options = self.canvas.itemconfig(item)
+            item_tags = self.canvas.gettags(item)
+            snapshot.append((item_type, item_coords, item_options, item_tags))
+        return snapshot
+    
+    def restore_snapshot(self, snapshot):
+        for item in snapshot:
+            item_type, item_coords, item_options, item_tags = item
+            if item_type == "line":
+                self.canvas.create_line(*item_coords, **{key: val[-1] for key, val in item_options.items()})
+            elif item_type == "rectangle":
+                self.canvas.create_rectangle(*item_coords, **{key: val[-1] for key, val in item_options.items()})
+            elif item_type == "oval":
+                self.canvas.create_oval(*item_coords, **{key: val[-1] for key, val in item_options.items()})
+            elif item_type == "text":
+                self.canvas.create_text(*item_coords, **{key: val[-1] for key, val in item_options.items()})
+            else:
+                print(f"Unsupported item type: {item_type}")
+
 
     def start_text_drawing(self, event):
         self.shape_start_x, self.shape_start_y = self.canvas.canvasx(event.x) / self.zoom_scale, self.canvas.canvasy(event.y) / self.zoom_scale
@@ -278,3 +316,16 @@ class WhiteboardLogic:
 
     def change_font_family(self, font_family):
         self.font_family = font_family
+    def undo(self):
+        if self.undo_stack:
+            self.redo_stack.append(self.get_canvas_snapshot())
+            snapshot = self.undo_stack.pop()
+            self.canvas.delete("all")
+            self.restore_snapshot(snapshot)
+
+    def redo(self):
+        if self.redo_stack:
+            self.undo_stack.append(self.get_canvas_snapshot())
+            snapshot = self.redo_stack.pop()
+            self.canvas.delete("all")
+            self.restore_snapshot(snapshot)
