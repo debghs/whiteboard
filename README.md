@@ -61,3 +61,4 @@ There are some bugs in this version:
 - The text insertion probably needs some tuning.(FIXED)
 - The home button is glitching.(FIXED)
 - The zoom is interfering with the textbox pop-up dimensions, i believe.(FIXED)
+- The already embeded texts are not enlarging/contracting while zooming in/out. 
