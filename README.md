@@ -50,6 +50,7 @@ The project is structured into three main files:
 - Save and load drawings using the "Save" and "Load" buttons.
 - Use "Text" button to draw a textbox, enter the text in the pop-up and then press ```esc``` button to save it inside the canvas.
 - Use "Text" button to draw a textbox, enter the text in the pop-up and then click the cursor somewhere else and the text would be saved as into an editable transparent box.
+- Double click on the editable text to select and then drag to re-position it or use arrow keys to position the cursor and edit the text or press ```delete``` to delete the text. 
 - The text would have the color the ink had previously.
 - To choose the font size of the text input, adjust the "Font Size:" before inserting the text.
 - Take notes alongside drawings by clicking the "Notes" button.
