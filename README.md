@@ -73,4 +73,4 @@ There are some bugs in this version:
 - The editable textbox needs to be transparent. It's currently mirroring the bg.
 - The moving around of the editable text is glitching when done in a zoomed-in canvas.
 - The undo and redo are still buggy in zoom-in/zoom-out canvases.
-
+- The text size is changing sometimes after doing undo-redo.
