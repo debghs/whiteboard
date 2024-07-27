@@ -58,7 +58,7 @@ The project is structured into three main files:
 - Press the "Home" button to return to the original camvas coordinates(in case you get lost).
 - Press the "Undo" and "Redo" buttons to undo and redo.
 
-## Note 
+## BUGS
 There are some bugs in this version:
 - The saved pickle files lose all the data when reopened using the app.(FIXED)
 - The text insertion probably needs some tuning.(FIXED)
@@ -70,3 +70,6 @@ There are some bugs in this version:
 - The editing of the editable text is functional, but a little weird.
 - The texts are not redo-ing because of the window element.
 - The editable textbox needs to be transparent. It's currently mirroring the bg.
+- The moving around of the editable text is glitching when done in a zoomed-in canvas.
+- The undo and redo are still buggy in zoom-in/zoom-out canvases.
+
