@@ -9,10 +9,11 @@ whiteboard is a simple drawing application built using Tkinter in Python. It all
 - Toggling dark mode for better visibility
 - Using an eraser to remove drawn lines
 - Saving and loading drawings in pickle format
-- Inserting text inside dynamically shaped custom textboxes
+- Inserting text inside dynamically shaped custom textboxes as embedded type or editable type
 - Taking notes alongside drawings
 - Zoom In and Out while drawing
 - Infinitely scrollable canvas
+- Undo and Redo
 
 ## File Structure
 The project is structured into three main files:
@@ -48,12 +49,14 @@ The project is structured into three main files:
 - Adjust the eraser width using the slider.
 - Save and load drawings using the "Save" and "Load" buttons.
 - Use "Text" button to draw a textbox, enter the text in the pop-up and then press ```esc``` button to save it inside the canvas.
+- Use "Text" button to draw a textbox, enter the text in the pop-up and then click the cursor somewhere else and the text would be saved as into an editable transparent box.
 - The text would have the color the ink had previously.
 - To choose the font size of the text input, adjust the "Font Size:" before inserting the text.
 - Take notes alongside drawings by clicking the "Notes" button.
 - Place the cursor on where you would like to zoom and press ```Ctrl-Shift-+``` to Zoom In and ```Ctrl-Shift-*``` to Zoom Out.
 - Use the sliders to navigate across the canvas.
 - Press the "Home" button to return to the original camvas coordinates(in case you get lost).
+- Press the "Undo" and "Redo" buttons to undo and redo.
 
 ## Note 
 There are some bugs in this version:
@@ -64,3 +67,6 @@ There are some bugs in this version:
 - The already embeded texts are not enlarging/contracting while zooming in/out.
 - Both Undo and Redo buttons are requiring two clicks everytime to work.
 - The text insertion feature is having a minor glitch with Undo, cuz the textbox outline is getting counted as a snapshot.
+- The editing of the editable text is functional, but a little weird.
+- The texts are not redo-ing because of the window element.
+- The editable textbox needs to be transparent. It's currently mirroring the bg.
