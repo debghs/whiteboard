@@ -69,7 +69,7 @@ There are some bugs in this version:
 - Both Undo and Redo buttons are requiring two clicks everytime to work.
 - The text insertion feature is having a minor glitch with Undo, cuz the textbox outline is getting counted as a snapshot.
 - The editing of the editable text is functional, but a little weird.
-- The texts are not redo-ing because of the window element.
+- The texts are not redo-ing because of the window element.(FIXED)
 - The editable textbox needs to be transparent. It's currently mirroring the bg.
 - The moving around of the editable text is glitching when done in a zoomed-in canvas.
 - The undo and redo are still buggy in zoom-in/zoom-out canvases.
