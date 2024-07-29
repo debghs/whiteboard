@@ -102,6 +102,8 @@ class WhiteboardLogic:
                 self.canvas.create_oval(*item_coords, **{key: val[-1] for key, val in item_options.items()})
             elif item_type == "text":
                 self.canvas.create_text(*item_coords, **{key: val[-1] for key, val in item_options.items()})
+            elif item_type == "window":
+                self.canvas.create_window(*item_coords, **{key: val[-1] for key, val in item_options.items()})
             else:
                 print(f"Unsupported item type: {item_type}")
 
