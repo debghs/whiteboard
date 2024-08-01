@@ -66,7 +66,7 @@ There are some bugs in this version:
 - The home button is glitching.(FIXED)
 - The zoom is interfering with the textbox pop-up dimensions, i believe.(FIXED)
 - The already embeded texts are not enlarging/contracting while zooming in/out.
-- Both Undo and Redo buttons are requiring two clicks everytime to work.
+- Both Undo and Redo buttons are requiring two clicks everytime to work.(FIXED, kinda)
 - The text insertion feature is having a minor glitch with Undo, cuz the textbox outline is getting counted as a snapshot.
 - The editing of the editable text is functional, but a little weird.
 - The texts are not redo-ing because of the window element.(FIXED)
