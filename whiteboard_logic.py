@@ -429,9 +429,21 @@ class WhiteboardLogic:
             snapshot = self.undo_stack.pop()
             self.canvas.delete("all")
             self.restore_snapshot(snapshot)
+            #repeated to fix the double clicking of uno error
+            # i know this is bad code, but i fw it for now
+            #tho this doesn't fix the err completely (if you click the cursor somewhere on the scrn, it is considered as a snapshot. gotta fix that too, somehow.)
+            self.redo_stack.append(self.get_canvas_snapshot())        
+            snapshot = self.undo_stack.pop()
+            self.canvas.delete("all")
+            self.restore_snapshot(snapshot)
 
     def redo(self):
         if self.redo_stack:
+            self.undo_stack.append(self.get_canvas_snapshot())
+            snapshot = self.redo_stack.pop()
+            self.canvas.delete("all")
+            self.restore_snapshot(snapshot)
+            # same reason as in the undo function
             self.undo_stack.append(self.get_canvas_snapshot())
             snapshot = self.redo_stack.pop()
             self.canvas.delete("all")
