@@ -8,7 +8,7 @@ whiteboard is a simple drawing application built using Tkinter in Python. It all
 - Clearing the canvas
 - Toggling dark mode for better visibility
 - Using an eraser to remove drawn lines
-- Saving and loading drawings in pickle format
+- Saving and loading drawings in pickle format as well as image format.
 - Inserting text inside dynamically shaped custom textboxes as embedded type or editable type
 - Taking notes alongside drawings
 - Zoom In and Out while drawing
@@ -58,6 +58,7 @@ The project is structured into three main files:
 - Use the sliders to navigate across the canvas.
 - Press the "Home" button to return to the original camvas coordinates(in case you get lost).
 - Press the "Undo" and "Redo" buttons to undo and redo.
+- Choose the mode of file to be saved from the dropdown and press the ```Save``` button to save.
 
 ## BUGS
 There are some bugs in this version:
@@ -75,3 +76,4 @@ There are some bugs in this version:
 - The undo and redo are still buggy in zoom-in/zoom-out canvases.
 - The text size is changing sometimes after doing undo-redo.
 - The text-size choice isn't working anymore.
+- The save as image functionality captures external stuff (backgorund) when the app isn't in fullscreen mode.
