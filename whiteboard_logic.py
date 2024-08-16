@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import font
 import pickle
 from PIL import ImageGrab
+import os
 
 class WhiteboardLogic:
     def __init__(self, root):
@@ -366,7 +367,24 @@ class WhiteboardLogic:
             canvas_data.append(item_data)
 
         with open(file_path, "wb") as f:
-            pickle.dump(canvas_data, f)
+                pickle.dump(canvas_data, f)
+    def _save_canvas_as_image(self, file_path):
+        # Get the coordinates of the canvas relative to the screen
+        x = self.canvas.winfo_rootx()
+        y = self.canvas.winfo_rooty()
+        x1 = x + self.canvas.winfo_width()
+        y1 = y + self.canvas.winfo_height()
+
+#        # Adding slight adjustment to the left and top offsets
+#        if self.root.attributes("-fullscreen"):
+#            adjustment_x = 0  # No adjustment needed for fullscreen
+#            adjustment_y = 0
+#        else:
+#            adjustment_x = +70  # Adjustment needed for windowed mode
+#            adjustment_y = +30
+
+        ImageGrab.grab(bbox=(x , y , x1, y1)).save(file_path)
+
 
     def _load_canvas(self, file_path):
         self.canvas.delete("all")

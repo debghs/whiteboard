@@ -21,7 +21,6 @@ class WhiteboardApp(WhiteboardLogic):
         self.initial_zoom_level = 1
         self.initial_scroll_x = 0
         self.initial_scroll_y = 0
-        
 
     def create_widgets(self):
         self.controls_frame = tk.Frame(self.root)
@@ -30,6 +29,12 @@ class WhiteboardApp(WhiteboardLogic):
         # Existing widgets
         self.color_button = tk.Button(self.controls_frame, text="Change Color", relief="groove", command=self.change_pen_color)
         self.clear_button = tk.Button(self.controls_frame, text="Clear Canvas", relief="groove", command=self.clear_canvas)
+
+        # Dropdown to select save type
+        self.save_type_var = tk.StringVar(value="Pickle")
+        self.save_type_menu = tk.OptionMenu(self.controls_frame, self.save_type_var, "Pickle", "Image")
+        self.save_type_menu.pack(side="left", padx=5, pady=5)
+
         self.save_button = tk.Button(self.controls_frame, text="Save", relief="groove", command=self.save_canvas)
         self.load_button = tk.Button(self.controls_frame, text="Load", relief="groove", command=self.load_canvas)
         self.dark_mode_button = tk.Button(self.controls_frame, text="Dark Mode", relief="groove", command=self.toggle_dark_mode)
@@ -139,9 +144,15 @@ class WhiteboardApp(WhiteboardLogic):
             self.text_widget.pack(side="bottom", padx=5, pady=5, fill="x")
 
     def save_canvas(self):
-        file_path = filedialog.asksaveasfilename(defaultextension=".pkl", filetypes=[("Pickle files", "*.pkl")])
-        if file_path:
-            self._save_canvas(file_path)
+        save_type = self.save_type_var.get()
+        if save_type == "Pickle":
+            file_path = filedialog.asksaveasfilename(defaultextension=".pkl", filetypes=[("Pickle files", "*.pkl")])
+            if file_path:
+                self._save_canvas(file_path)
+        elif save_type == "Image":
+            file_path = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("PNG files", "*.png"), ("JPEG files", "*.jpg"), ("All files", "*.*")])
+            if file_path:
+                self._save_canvas_as_image(file_path)
 
     def load_canvas(self):
         file_path = filedialog.askopenfilename(filetypes=[("Pickle files", "*.pkl")])
