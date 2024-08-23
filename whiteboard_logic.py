@@ -20,7 +20,7 @@ class WhiteboardLogic:
         self.shape_start_y = None
         self.shape_id = None
         self.eraser_lines = []
-        self.cursor_circle_id = None
+        self.cursor_Oval_id = None
         self.text_boxes = []
         self.active_textbox = None
         self.textbox_window = None
@@ -129,7 +129,7 @@ class WhiteboardLogic:
             self.shape_id = self.canvas.create_line(event.x, event.y, event.x, event.y, fill=self.drawing_color, width=self.line_width)
         elif self.current_shape == "rectangle":
             self.shape_id = self.canvas.create_rectangle(event.x, event.y, event.x, event.y, outline=self.drawing_color, width=self.line_width)
-        elif self.current_shape == "circle":
+        elif self.current_shape == "Oval":
             self.shape_id = self.canvas.create_oval(event.x, event.y, event.x, event.y, outline=self.drawing_color, width=self.line_width)
 
     def update_shape(self, current_x, current_y):
@@ -139,7 +139,7 @@ class WhiteboardLogic:
             self.shape_id = self.canvas.create_line(self.shape_start_x, self.shape_start_y, current_x, current_y, fill=self.drawing_color, width=self.line_width)
         elif self.current_shape == "rectangle":
             self.shape_id = self.canvas.create_rectangle(self.shape_start_x, self.shape_start_y, current_x, current_y, outline=self.drawing_color, width=self.line_width)
-        elif self.current_shape == "circle":
+        elif self.current_shape == "Oval":
             self.shape_id = self.canvas.create_oval(self.shape_start_x, self.shape_start_y, current_x, current_y, outline=self.drawing_color, width=self.line_width)
 
     def draw_eraser(self, current_x, current_y):
@@ -328,25 +328,25 @@ class WhiteboardLogic:
         self.update_cursor()
 
     def update_cursor(self):
-        if self.cursor_circle_id:
-            self.canvas.delete(self.cursor_circle_id)
-        self.root.bind("<Motion>", self.draw_cursor_circle)
+        if self.cursor_Oval_id:
+            self.canvas.delete(self.cursor_Oval_id)
+        self.root.bind("<Motion>", self.draw_cursor_Oval)
 
-    def draw_cursor_circle(self, event):
+    def draw_cursor_Oval(self, event):
         if self.canvas.winfo_containing(event.x_root, event.y_root) == self.canvas:
-            if self.cursor_circle_id:
-                self.canvas.delete(self.cursor_circle_id)
+            if self.cursor_Oval_id:
+                self.canvas.delete(self.cursor_Oval_id)
             x = self.canvas.canvasx(event.x)
             y = self.canvas.canvasy(event.y)
             radius = self.line_width / 2
-            self.cursor_circle_id = self.canvas.create_oval(
+            self.cursor_Oval_id = self.canvas.create_oval(
                 x - radius, y - radius, x + radius, y + radius,
                 outline=self.drawing_color, width=1
             )
         else:
-            if self.cursor_circle_id:
-                self.canvas.delete(self.cursor_circle_id)
-            self.cursor_circle_id = None
+            if self.cursor_Oval_id:
+                self.canvas.delete(self.cursor_Oval_id)
+            self.cursor_Oval_id = None
 
     def _save_canvas(self, file_path):
         items = self.canvas.find_all()
