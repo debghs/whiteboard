@@ -77,3 +77,4 @@ There are some bugs in this version:
 - The text size is changing sometimes after doing undo-redo.
 - The text-size choice isn't working anymore.
 - The save as image functionality captures external stuff (backgorund) when the app isn't in fullscreen mode.
+- The save as image functionality doesn't properly capture the whole canvas either.
