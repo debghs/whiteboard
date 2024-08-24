@@ -1,5 +1,6 @@
 import tkinter as tk
-from tkinter import font
+from tkinter.colorchooser import askcolor
+from tkinter import font, filedialog
 import pickle
 from PIL import ImageGrab
 import os
@@ -466,3 +467,58 @@ class WhiteboardLogic:
             snapshot = self.redo_stack.pop()
             self.canvas.delete("all")
             self.restore_snapshot(snapshot)
+
+    def zoom_in(self, event=None):
+        self.canvas.scale("all", 0, 0, 1.1, 1.1)
+        self.initial_zoom_level *= 1.1
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+        self.scroll_x.config(command=self.canvas.xview)
+        self.scroll_y.config(command=self.canvas.yview)
+
+    def zoom_out(self, event=None):
+        self.canvas.scale("all", 0, 0, 0.9, 0.9)
+        self.initial_zoom_level *= 0.9
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+        self.scroll_x.config(command=self.canvas.xview)
+        self.scroll_y.config(command=self.canvas.yview)
+
+    def reset_view(self):
+        self.canvas.scale("all", 0, 0, 1/self.initial_zoom_level, 1/self.initial_zoom_level)
+        self.canvas.configure(scrollregion=(0, 0, 10000, 10000))
+        self.canvas.xview_moveto(self.initial_scroll_x)
+        self.canvas.yview_moveto(self.initial_scroll_y)
+        self.initial_zoom_level = 1
+
+    def change_pen_color(self):
+        color = askcolor()[1]
+        if color:
+            self.drawing_color = color
+            self.text_color = color  # Update text color with the selected color
+            if self.is_eraser:
+                self.toggle_eraser()
+
+    def toggle_notes_section(self):
+        if self.text_widget.winfo_ismapped():
+            self.text_widget.pack_forget()
+        else:
+            self.text_widget.pack(side="bottom", padx=5, pady=5, fill="x")
+
+    def save_canvas(self):
+        save_type = self.save_type_var.get()
+        if save_type == "Pickle":
+            file_path = filedialog.asksaveasfilename(defaultextension=".pkl", filetypes=[("Pickle files", "*.pkl")])
+            if file_path:
+                self._save_canvas(file_path)
+        elif save_type == "Image":
+            file_path = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("PNG files", "*.png"), ("JPEG files", "*.jpg"), ("All files", "*.*")])
+            if file_path:
+                self._save_canvas_as_image(file_path)
+
+    def load_canvas(self):
+        file_path = filedialog.askopenfilename(filetypes=[("Pickle files", "*.pkl")])
+        if file_path and os.path.exists(file_path):
+            self._load_canvas(file_path)
+
+    def change_font_family_selection(self, event=None):
+        font_family = self.font_family_var.get()
+        self.change_font_family(font_family)
