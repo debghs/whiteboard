@@ -79,3 +79,4 @@ There are some bugs in this version:
 - The save as image functionality captures external stuff (backgorund) when the app isn't in fullscreen mode.
 - The save as image functionality doesn't properly capture the whole canvas either.
 - The undo functionality does not handle the eraser track colours well enough, when the modes/colors are changing.
+- The the editable type of text gets fixed to one spot after pressing undo-redo, even though it's editable still.
