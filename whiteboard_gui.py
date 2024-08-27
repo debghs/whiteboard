@@ -1,9 +1,9 @@
 import tkinter as tk
+from tkinter import ttk
 from tkinter.colorchooser import askcolor
 from tkinter import filedialog, PhotoImage
-from tkinter.font import Font, families
+from tkinter.font import families
 from whiteboard_logic import WhiteboardLogic
-import os
 
 class WhiteboardApp(WhiteboardLogic):
     def __init__(self, root):
@@ -23,145 +23,156 @@ class WhiteboardApp(WhiteboardLogic):
         self.initial_scroll_y = 0
 
     def create_widgets(self):
-        self.controls_frame = tk.Frame(self.root)
-        self.controls_frame.pack(side="top", fill="x")
+        self.controls_frame = ttk.Frame(self.root)
+        self.controls_frame.grid(row=0, column=0, sticky="ew")
+        self.root.grid_rowconfigure(0, weight=0)
+        self.root.grid_columnconfigure(0, weight=1)
 
-        # Existing widgets
-        self.color_button = tk.Button(self.controls_frame, text="Color", relief="groove", command=self.change_pen_color)
-        self.clear_button = tk.Button(self.controls_frame, text="Clear", relief="groove", command=self.clear_canvas)
-
-        # Dropdown to select save type
+        # Creating buttons with grid layout
+        self.color_button = ttk.Button(self.controls_frame, text="Color", command=self.change_pen_color)
+        self.clear_button = ttk.Button(self.controls_frame, text="Clear", command=self.clear_canvas)
         self.save_type_var = tk.StringVar(value="Pickle")
-        self.save_type_menu = tk.OptionMenu(self.controls_frame, self.save_type_var, "Pickle", "Image")
-        #self.save_type_menu.pack(side="left", padx=5, pady=5)         pack this down
+        self.save_type_menu = ttk.Combobox(self.controls_frame, textvariable=self.save_type_var, values=["Pickle", "Image"], state="readonly")
+        self.save_button = ttk.Button(self.controls_frame, text="Save", command=self.save_canvas)
+        self.load_button = ttk.Button(self.controls_frame, text="Load", command=self.load_canvas)
+        self.dark_mode_button = ttk.Button(self.controls_frame, text="Dark Mode", command=self.toggle_dark_mode)
+        self.eraser_button = ttk.Button(self.controls_frame, text="Eraser", command=self.toggle_eraser)
+        self.notes_button = ttk.Button(self.controls_frame, text="Notes", command=self.toggle_notes_section)
+        self.freehand_button = ttk.Button(self.controls_frame, text="Freehand", command=self.select_freehand)
+        self.line_button = ttk.Button(self.controls_frame, text="Line", command=lambda: self.select_shape("line"))
+        self.rectangle_button = ttk.Button(self.controls_frame, text="Rectangle", command=lambda: self.select_shape("rectangle"))
+        self.oval_button = ttk.Button(self.controls_frame, text="Oval", command=lambda: self.select_shape("Oval"))
+        self.text_button = ttk.Button(self.controls_frame, text="Text", command=lambda: self.select_shape("text"))
+        self.home_button = ttk.Button(self.controls_frame, text="Home", command=self.reset_view)
+        self.undo_button = ttk.Button(self.controls_frame, text="Undo", command=self.undo)
+        self.redo_button = ttk.Button(self.controls_frame, text="Redo", command=self.redo)
 
-        self.save_button = tk.Button(self.controls_frame, text="Save", relief="groove", command=self.save_canvas)
-        self.load_button = tk.Button(self.controls_frame, text="Load", relief="groove", command=self.load_canvas)
-        self.dark_mode_button = tk.Button(self.controls_frame, text="Dark Mode", relief="groove", command=self.toggle_dark_mode)
-        self.eraser_button = tk.Button(self.controls_frame, text="Eraser", relief="groove", command=self.toggle_eraser)
-        self.notes_button = tk.Button(self.controls_frame, text="Notes", relief="groove", command=self.toggle_notes_section)
-        self.freehand_button = tk.Button(self.controls_frame, text="Freehand", relief="groove", command=self.select_freehand)
-        self.line_button = tk.Button(self.controls_frame, text="Line", relief="groove", command=lambda: self.select_shape("line"))
-        self.rectangle_button = tk.Button(self.controls_frame, text="Rectangle", relief="groove", command=lambda: self.select_shape("rectangle"))
-        self.Oval_button = tk.Button(self.controls_frame, text="Oval", relief="groove", command=lambda: self.select_shape("Oval"))
-        self.text_button = tk.Button(self.controls_frame, text="Text", relief="groove", command=lambda: self.select_shape("text"))
+        # Adding buttons to the grid
+        buttons = [
+            self.color_button, self.clear_button, self.save_button, self.save_type_menu, self.load_button,
+            self.dark_mode_button, self.eraser_button, self.notes_button, self.freehand_button,
+            self.line_button, self.rectangle_button, self.oval_button, self.text_button,
+            self.home_button, self.undo_button, self.redo_button
+        ]
 
-        self.color_button.pack(side="left", padx=5, pady=5)
-        self.clear_button.pack(side="left", padx=5, pady=5)
-        self.save_button.pack(side="left", padx=5, pady=5)
-        self.save_type_menu.pack(side="left", padx=5, pady=5)
-        self.load_button.pack(side="left", padx=5, pady=5)
-        self.dark_mode_button.pack(side="left", padx=5, pady=5)
-        self.eraser_button.pack(side="left", padx=5, pady=5)
-        self.notes_button.pack(side="left", padx=5, pady=5)
-        self.freehand_button.pack(side="left", padx=5, pady=5)
-        self.line_button.pack(side="left", padx=5, pady=5)
-        self.rectangle_button.pack(side="left", padx=5, pady=5)
-        self.Oval_button.pack(side="left", padx=5, pady=5)
-        self.text_button.pack(side="left", padx=5, pady=5)
-        self.home_button = tk.Button(self.controls_frame, text="Home", relief="groove", command=self.reset_view)
-        self.home_button.pack(side="left", padx=5, pady=5)
-        self.undo_button = tk.Button(self.controls_frame, text="Undo", relief="groove", command=self.undo)
-        self.undo_button.pack(side="left", padx=5, pady=5)
-        self.redo_button = tk.Button(self.controls_frame, text="Redo", relief="groove", command=self.redo)
-        self.redo_button.pack(side="left", padx=5, pady=5)
+        for i, button in enumerate(buttons):
+            button.grid(row=0, column=i, padx=5, pady=5, sticky="ew")
+            self.controls_frame.grid_columnconfigure(i, weight=1)
 
-        self.line_width_label = tk.Label(self.controls_frame, text="Width:")
-        self.line_width_label.pack(side="left", padx=5, pady=5)
+        self.line_width_label = ttk.Label(self.controls_frame, text="Width:")
+        self.line_width_label.grid(row=1, column=0, padx=5, pady=5, sticky="e")
 
-        self.line_width_slider = tk.Scale(self.controls_frame, from_=1, to=100, orient="horizontal", command=self.change_line_width)
+        self.line_width_slider = ttk.Scale(self.controls_frame, from_=1, to=100, orient="horizontal", command=self.change_line_width)
         self.line_width_slider.set(self.line_width)
-        self.line_width_slider.pack(side="left", padx=5, pady=5, fill="x")
+        self.line_width_slider.grid(row=1, column=1, padx=5, pady=5, columnspan=3, sticky="ew")
+        self.controls_frame.grid_columnconfigure(1, weight=1)
 
-        # Add font size selection widget
-        self.font_size_label = tk.Label(self.controls_frame, text="Font Size:")
-        self.font_size_label.pack(side="left", padx=5, pady=5)
+        # Font size selection widget
+        self.font_size_label = ttk.Label(self.controls_frame, text="Font Size:")
+        self.font_size_label.grid(row=1, column=4, padx=5, pady=5, sticky="e")
 
         self.font_size_var = tk.IntVar(value=12)
-        self.font_size_menu = tk.OptionMenu(self.controls_frame, self.font_size_var, *range(8, 73, 2))
-        self.font_size_menu.pack(side="left", padx=5, pady=5)
+        self.font_size_menu = ttk.Combobox(self.controls_frame, textvariable=self.font_size_var, values=list(range(8, 73, 2)), state="readonly")
+        self.font_size_menu.grid(row=1, column=5, padx=5, pady=5, sticky="ew")
+        self.controls_frame.grid_columnconfigure(5, weight=1)
 
-        # Add font family selection widget using tkinter.font.Font
+        # Font family selection widget
         font_families = families()
-        self.font_family_label = tk.Label(self.controls_frame, text="Font Family:")
-        self.font_family_label.pack(side="left", padx=5, pady=5)
+        self.font_family_label = ttk.Label(self.controls_frame, text="Font Family:")
+        self.font_family_label.grid(row=1, column=6, padx=5, pady=5, sticky="e")
 
         self.font_family_var = tk.StringVar(value="Arial")  # Default font family
-        self.font_family_menu = tk.OptionMenu(self.controls_frame, self.font_family_var, *font_families, command=self.change_font_family_selection)
-        self.font_family_menu.pack(side="left", padx=5, pady=5)
+        self.font_family_menu = ttk.Combobox(self.controls_frame, textvariable=self.font_family_var, values=font_families, state="readonly")
+        self.font_family_menu.grid(row=1, column=7, padx=5, pady=5, sticky="ew")
+        self.controls_frame.grid_columnconfigure(7, weight=1)
 
+        # Canvas with modern scrollbars
         self.canvas = tk.Canvas(self.root, bg="white", scrollregion=(0, 0, 10000, 10000))
-        self.scroll_x = tk.Scrollbar(self.root, orient="horizontal", command=self.canvas.xview)
-        self.scroll_y = tk.Scrollbar(self.root, orient="vertical", command=self.canvas.yview)
+        self.scroll_x = ttk.Scrollbar(self.root, orient="horizontal", command=self.canvas.xview)
+        self.scroll_y = ttk.Scrollbar(self.root, orient="vertical", command=self.canvas.yview)
         self.canvas.configure(xscrollcommand=self.scroll_x.set, yscrollcommand=self.scroll_y.set)
-        self.scroll_x.pack(side="bottom", fill="x")
-        self.scroll_y.pack(side="right", fill="y")
-        self.canvas.pack(side="left", fill="both", expand=True)
+        self.scroll_x.grid(row=2, column=0, columnspan=10, sticky="ew")
+        self.scroll_y.grid(row=1, column=8, sticky="ns")
+        self.canvas.grid(row=1, column=0, columnspan=8, sticky="nsew")
 
-        self.canvas.pack(fill="both", expand=True)
+        self.root.grid_rowconfigure(1, weight=1)
+        self.root.grid_columnconfigure(0, weight=1)
 
+        # Bindings for canvas actions
         self.canvas.bind("<Button-1>", self.start_drawing)
         self.canvas.bind("<B1-Motion>", self.draw)
         self.canvas.bind("<ButtonRelease-1>", self.stop_drawing)
 
         self.text_widget = tk.Text(self.root, height=6, width=120)
-        self.text_widget.pack_forget()
-        
+        self.text_widget.grid(row=3, column=0, columnspan=8, sticky="ew")
+        self.text_widget.grid_forget()
+
         self.update_theme()
 
     def update_theme(self):
+        # Update the theme (unchanged from the previous version)
         if self.is_dark_mode:
             self.root.config(bg="black")
             self.canvas.config(bg="gray10")
-            self.controls_frame.config(bg="gray20")
-            self.line_width_label.config(bg="gray20", fg="white")
-            self.line_width_slider.config(bg="gray20", fg="white", troughcolor="gray30")
+            self.controls_frame.config(style="Dark.TFrame")
+            self.line_width_label.config(style="Dark.TLabel")
+            self.line_width_slider.config(style="Dark.Horizontal.TScale")
             self.text_widget.config(bg="gray30", fg="white")
             self.update_button_colors("gray30", "white")
             self.dark_mode_button.config(text="Light Mode")
-            self.font_size_label.config(bg="gray30", fg="white")
-            self.font_size_menu.config(bg="gray30", fg="white")
-            self.font_family_label.config(bg="gray30", fg="white")
-            self.font_family_menu.config(bg="gray30", fg="white")
-            self.home_button.config(bg="gray30", fg="white")
-            self.undo_button.config(bg="gray30", fg="white")
-            self.redo_button.config(bg="gray30", fg="white")
-            self.save_type_menu.config(bg="gray30", fg="white")
+            self.font_size_label.config(style="Dark.TLabel")
+            self.font_size_menu.config(style="Dark.TCombobox")
+            self.font_family_label.config(style="Dark.TLabel")
+            self.font_family_menu.config(style="Dark.TCombobox")
+            self.home_button.config(style="Dark.TButton")
+            self.undo_button.config(style="Dark.TButton")
+            self.redo_button.config(style="Dark.TButton")
+            self.save_type_menu.config(style="Dark.TCombobox")
         else:
             self.root.config(bg="white")
             self.canvas.config(bg="white")
-            self.controls_frame.config(bg="white")
-            self.line_width_label.config(bg="white", fg="black")
-            self.line_width_slider.config(bg="white", fg="black", troughcolor="lightgray")
+            self.controls_frame.config(style="Light.TFrame")
+            self.line_width_label.config(style="Light.TLabel")
+            self.line_width_slider.config(style="Light.Horizontal.TScale")
             self.text_widget.config(bg="white", fg="black")
             self.update_button_colors("white", "black")
             self.dark_mode_button.config(text="Dark Mode")
-            self.font_size_label.config(bg="white", fg="black")
-            self.font_size_menu.config(bg="white", fg="black")
-            self.font_family_label.config(bg="white", fg="black")
-            self.font_family_menu.config(bg="white", fg="black")
-            self.home_button.config(bg="white", fg="black")
-            self.undo_button.config(bg="white", fg="black")
-            self.redo_button.config(bg="white", fg="black")
-            self.save_type_menu.config(bg="white", fg="black")
-        #self.undo_button.config(bg="gray30" if self.is_dark_mode else "white", fg="white" if self.is_dark_mode else "black")            redundant
-        #self.redo_button.config(bg="gray30" if self.is_dark_mode else "white", fg="white" if self.is_dark_mode else "black")            redundant
-		
+            self.font_size_label.config(style="Light.TLabel")
+            self.font_size_menu.config(style="Light.TCombobox")
+            self.font_family_label.config(style="Light.TLabel")
+            self.font_family_menu.config(style="Light.TCombobox")
+            self.home_button.config(style="Light.TButton")
+            self.undo_button.config(style="Light.TButton")
+            self.redo_button.config(style="Light.TButton")
+            self.save_type_menu.config(style="Light.TCombobox")
 
-
-
-        self.update_eraser_lines_color()
+        #self.update_eraser_lines_color()
 
     def update_button_colors(self, bg_color, fg_color):
+        # Apply ttk styling instead of changing colors directly
         button_list = [
             self.color_button, self.clear_button, self.save_button,
             self.load_button, self.dark_mode_button, self.eraser_button, self.notes_button,
-            self.freehand_button, self.line_button, self.rectangle_button, self.Oval_button, self.text_button
+            self.freehand_button, self.line_button, self.rectangle_button, self.oval_button, self.text_button
         ]
 
         for button in button_list:
-            button.config(bg=bg_color, fg=fg_color)
+            button.style = ttk.Style()
+            button.style.configure(f"{button}.TButton", background=bg_color, foreground=fg_color)
+            button.configure(style=f"{button}.TButton")
+
+        self.home_button.style = ttk.Style()
+        self.home_button.style.configure("Home.TButton", background=bg_color, foreground=fg_color)
+        self.home_button.configure(style="Home.TButton")
+
+        self.undo_button.style = ttk.Style()
+        self.undo_button.style.configure("Undo.TButton", background=bg_color, foreground=fg_color)
+        self.undo_button.configure(style="Undo.TButton")
+
+        self.redo_button.style = ttk.Style()
+        self.redo_button.style.configure("Redo.TButton", background=bg_color, foreground=fg_color)
+        self.redo_button.configure(style="Redo.TButton")
 
     def update_eraser_lines_color(self):
-        for line in self.eraser_lines:
-            self.canvas.itemconfig(line, fill=self.canvas["bg"])
+        eraser_color = "white" if self.is_dark_mode else "black"
+        self.canvas.itemconfig(self.eraser_line_id, fill=eraser_color)
