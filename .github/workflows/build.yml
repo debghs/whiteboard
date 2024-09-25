@@ -49,7 +49,6 @@ jobs:
           git add .
           if [ "$(git status --porcelain)" ]; then
             git commit -m "Add compiled binaries for version ${{ github.ref_name }}"
-            git checkout -b build-${{ github.ref_name }}
             git push origin main
           else
             echo "No changes to commit"
