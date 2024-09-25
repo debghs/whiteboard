@@ -36,6 +36,7 @@ jobs:
   
       - name: Set up the correct branch
         run: |
+          git branch
           git checkout main 
 
       - name: List build directory contents
