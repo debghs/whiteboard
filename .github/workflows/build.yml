@@ -36,8 +36,8 @@ jobs:
   
       - name: Set up the correct branch
         run: |
-          git branch
-          git checkout main 
+          git fetch origin main  
+          git checkout main || git checkout -b main 
 
       - name: List build directory contents
         run: ls -R build/
