@@ -12,8 +12,9 @@ class WhiteboardApp(WhiteboardLogic):
         self.root.title("Whiteboard")
         self.root.geometry("1050x600+150+50")
         self.root.resizable(True, True)
-        icon_img = PhotoImage(file="assets/icon.png")
-        self.root.iconphoto(False, icon_img)
+        #icon_img = PhotoImage(file="assets/icon.png")
+        #self.root.iconphoto(False, icon_img)
+        #commented out to handle image integration error
         self.create_widgets()
         self.update_cursor()
         self.root.bind("<Control-+>", self.zoom_in)
