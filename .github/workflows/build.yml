@@ -48,9 +48,8 @@ jobs:
           git add .
           if [ "$(git status --porcelain)" ]; then
             git commit -m "Add compiled binaries for version ${{ github.ref_name }}"
-            # Create a new branch based on the current commit
             git checkout -b build-${{ github.ref_name }}
-            git push origin build-${{ github.ref_name }}  # Push to the new branch
+            git push origin main
           else
             echo "No changes to commit"
           fi
