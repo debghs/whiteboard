@@ -56,13 +56,17 @@ jobs:
           move dist\\main.exe build\\windows\\
 
   commit_binaries:
-    needs: build
+    needs: [build, build-windows]
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Set up the correct branch
+        run: |
+          git checkout ${{ github.ref_name }} || git checkout main  # Replace 'main' if needed
+  
       - name: Commit built binaries
         run: |
           git config --local user.email "dghosh31428@gmail.com"
