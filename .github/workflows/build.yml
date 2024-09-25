@@ -36,7 +36,7 @@ jobs:
   
       - name: Set up the correct branch
         run: |
-          git checkout ${{ github.ref_name }} || git checkout main  # Replace 'main' if needed
+          git checkout main 
 
       - name: List build directory contents
         run: ls -R build/
