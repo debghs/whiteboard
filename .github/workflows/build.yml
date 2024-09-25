@@ -8,10 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
@@ -27,28 +24,25 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Build Executable
+      - name: Build Linux executable
         run: |
-          if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
-            pip install pyinstaller
-            pyinstaller --onefile main.py
-            mkdir -p build/linux
-            mv dist/main build/linux/
-          else
-            pip install pyinstaller
-            pyinstaller --onefile main.py
-            mkdir -p build/windows
-            move dist\\main.exe build\\windows\\
-          fi
+          pip install pyinstaller
+          pyinstaller --onefile main.py
+          mkdir -p build/linux
+          mv dist/main build/linux/
+
+      - name: Set up the correct branch
+        run: |
+          git checkout ${{ github.ref_name }} || git checkout main  # Replace 'main' if needed
 
       - name: List build directory contents
         run: ls -R build/
-
+         
       - name: Commit built binaries
         run: |
           git config --local user.email "dghosh31428@gmail.com"
           git config --local user.name "debghs"
-          git add build/
+          git add .
           git commit -m "Add compiled binaries for version ${{ github.ref }}" || echo "No changes to commit"
           git push origin HEAD:${{ github.ref }}  # Push to the tag ref
         env:
