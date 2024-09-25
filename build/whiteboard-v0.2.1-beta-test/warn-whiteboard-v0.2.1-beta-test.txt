@@ -15,7 +15,7 @@ IMPORTANT: Do NOT post this list to the issue-tracker. Use it as a basis for
             tracking down the missing module yourself. Thanks!
 
 missing module named pyimod02_importers - imported by /opt/hostedtoolcache/Python/3.9.20/x64/lib/python3.9/site-packages/PyInstaller/hooks/rthooks/pyi_rth_pkgres.py (delayed), /opt/hostedtoolcache/Python/3.9.20/x64/lib/python3.9/site-packages/PyInstaller/hooks/rthooks/pyi_rth_pkgutil.py (delayed)
-missing module named nt - imported by shutil (conditional), importlib._bootstrap_external (conditional), ntpath (optional), pathlib (conditional), os (delayed, conditional, optional), ctypes (delayed, conditional)
+missing module named nt - imported by os (delayed, conditional, optional), ntpath (optional), shutil (conditional), importlib._bootstrap_external (conditional), pathlib (conditional), ctypes (delayed, conditional)
 missing module named pep517 - imported by importlib.metadata (delayed)
 missing module named 'org.python' - imported by copy (optional), xml.sax (delayed, conditional)
 missing module named org - imported by pickle (optional)
