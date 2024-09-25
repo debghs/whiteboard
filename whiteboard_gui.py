@@ -14,7 +14,7 @@ class WhiteboardApp(WhiteboardLogic):
         self.root.resizable(True, True)
         #icon_img = PhotoImage(file="assets/icon.png")
         #self.root.iconphoto(False, icon_img)
-        #commented out to handle image integration error
+        #commented out to handle image integration error.
         self.create_widgets()
         self.update_cursor()
         self.root.bind("<Control-+>", self.zoom_in)
