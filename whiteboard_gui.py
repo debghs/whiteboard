@@ -165,3 +165,4 @@ class WhiteboardApp(WhiteboardLogic):
     def update_eraser_lines_color(self):
         for line in self.eraser_lines:
             self.canvas.itemconfig(line, fill=self.canvas["bg"])
+#testing workflow build
