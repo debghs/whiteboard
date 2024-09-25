@@ -8,11 +8,10 @@ on:
 
 jobs:
   build:
-    runs:
-      strategy:
-        matrix:
-          os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
 
     steps:
       - name: Checkout repository
@@ -30,7 +29,7 @@ jobs:
 
       - name: Build Executable
         run: |
-          if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+          if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
             pip install pyinstaller
             pyinstaller --onefile main.py
             mkdir -p build/linux
@@ -38,7 +37,7 @@ jobs:
           else
             pip install pyinstaller
             pyinstaller --onefile main.py
-            # mkdir -p build/windows
+            mkdir -p build/windows
             move dist\\main.exe build\\windows\\
           fi
 
