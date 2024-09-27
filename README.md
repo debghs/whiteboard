@@ -82,6 +82,6 @@ There are some bugs in this version:
 - The the editable type of text gets fixed to one spot after pressing undo-redo, even though it's editable still.
 
 ## SETUP_BUGS
-- The the linux binary is not working due to os keymap non-migration. 
-- The build is uploading redundant compilation files with every build.
+- The the linux binary is not working due to os keymap non-migration.(FIXED)
+- The build is uploading redundant compilation files with every build.(FIXED)
 
