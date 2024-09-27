@@ -17,8 +17,8 @@ class WhiteboardApp(WhiteboardLogic):
         #commented out to handle image integration error.
         self.create_widgets()
         self.update_cursor()
-        self.root.bind("<Control-+>", self.zoom_in)
-        self.root.bind("<Control-*>", self.zoom_out)
+        self.root.bind("<Control-plus>", self.zoom_in)
+        self.root.bind("<Control-minus>", self.zoom_out)
         self.initial_zoom_level = 1
         self.initial_scroll_x = 0
         self.initial_scroll_y = 0
