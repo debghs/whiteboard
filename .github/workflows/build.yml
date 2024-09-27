@@ -49,7 +49,7 @@ jobs:
           OUTPUT_NAME="${BASE_NAME}-${VERSION}"
           git config --local user.email "dghosh31428@gmail.com"
           git config --local user.name "debghs"
-          git add "${OUTPUT_NAME}"
+          git add build/linux/"${OUTPUT_NAME}"
           if [ "$(git status --porcelain)" ]; then
             git commit -m "Add compiled binaries for version ${{ github.ref_name }}"
             git push origin main
