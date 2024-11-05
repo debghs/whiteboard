@@ -22,21 +22,28 @@ The project is structured into three main files:
 3. `whiteboard_logic.py`: Contains the core logic and functionality of the Whiteboard App.
 
 ## Installation
-1. Clone the repository:
+1. For Usage:
+      - Download the latest version from the [Releases](https://github.com/debghs/whiteboard/releases) section.
+      - Download any specific version from the [Releases](https://github.com/debghs/whiteboard/releases) section or the [build](https://github.com/debghs/whiteboard/build) directory.
 
-   ```git clone https://github.com/debghs/whiteboard.git```
-
-2. Navigate to the project directory:
-
-   ```cd whiteboard```
-
-3. Install the required dependencies:
-
-   ```pip install -r requirements.txt```
-
-4. Run the application:
-
-   ```python main.py```
+2. For Development:
+      1. Fork the repository.
+   
+      2. Clone the repository:
+      
+         ```git clone https://github.com/{your-username}/whiteboard.git```
+      
+      3. Navigate to the project directory:
+      
+         ```cd whiteboard```
+      
+      4. Install the required dependencies:
+      
+         ```pip install -r requirements.txt```
+      
+      5. Run the application:
+      
+         ```python main.py```
 
 ## Usage
 - Draw on the canvas by clicking and dragging the mouse/touchpad.
