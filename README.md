@@ -24,11 +24,11 @@ The project is structured into three main files:
 ## Installation
 1. Clone the repository:
 
-   ```git clone https://github.com/your-username/whiteboard-app.git```
+   ```git clone https://github.com/debghs/whiteboard.git```
 
 2. Navigate to the project directory:
 
-   ```cd whiteboard-app```
+   ```cd whiteboard```
 
 3. Install the required dependencies:
 
