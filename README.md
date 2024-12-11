@@ -87,7 +87,7 @@ There are some bugs in this version:
 - The save as image functionality doesn't properly capture the whole canvas either.
 - The undo functionality does not handle the eraser track colours well enough, when the modes/colors are changing.
 - The the editable type of text gets fixed to one spot after pressing undo-redo, even though it's editable still.
-- The eraser tracks and the undo-redo aren't syncing the bg colors properly while switching b/w dark and light modes.
+- The eraser tracks and the undo-redo aren't syncing the bg colors properly while switching b/w dark and light modes(found on linux(pop os)).
 
 ## SETUP_BUGS
 - The the linux binary is not working due to os keymap non-migration.(FIXED)
