@@ -1,5 +1,5 @@
 import tkinter as tk
-from whiteboard_gui import WhiteboardApp
+from whiteboard_app import WhiteboardApp
 
 if __name__ == "__main__":
     root = tk.Tk()
