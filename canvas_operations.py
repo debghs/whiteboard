@@ -7,6 +7,9 @@ class CanvasOperations:
         self.zoom_scale = zoom_scale
         self.eraser_lines = []
         self.cursor_Oval_id = None
+        self.history = []
+        self.current_state = -1
+        self.max_history = 50
 
     def draw_freehand(self, prev_x, prev_y, current_x, current_y, color, line_width):
         self.canvas.create_line(prev_x, prev_y, current_x, current_y, 
@@ -53,9 +56,64 @@ class CanvasOperations:
                 outline=color, width=1
             )
 
+    def save_state(self):
+        state = []
+        for item in self.canvas.find_all():
+            coords = self.canvas.coords(item)
+            item_type = self.canvas.type(item)
+            config = {key: self.canvas.itemcget(item, key) for key in self.canvas.itemconfig(item)}
+            tags = self.canvas.gettags(item)
+            state.append((item_type, coords, config, tags))
+        
+        # Remove future states if we're in the middle of the history
+        self.history = self.history[:self.current_state + 1]
+        self.history.append(state)
+        
+        # Keep history size manageable
+        if len(self.history) > self.max_history:
+            self.history.pop(0)
+        else:
+            self.current_state += 1
+
+    def undo(self):
+        if self.current_state > 0:
+            self.current_state -= 1
+            self.restore_state(self.history[self.current_state])
+
+    def redo(self):
+        if self.current_state < len(self.history) - 1:
+            self.current_state += 1
+            self.restore_state(self.history[self.current_state])
+
+    def restore_state(self, state):
+        self.canvas.delete("all")
+        self.eraser_lines.clear()
+        for item_type, coords, config, tags in state:
+            item = None
+            if item_type == "line":
+                item = self.canvas.create_line(*coords)
+            elif item_type == "rectangle":
+                item = self.canvas.create_rectangle(*coords)
+            elif item_type == "oval":
+                item = self.canvas.create_oval(*coords)
+            elif item_type == "text":
+                item = self.canvas.create_text(*coords)
+            
+            if item:
+                for key, value in config.items():
+                    try:
+                        if "eraser" in tags and key == "fill":
+                            value = self.canvas["bg"]
+                        self.canvas.itemconfig(item, **{key: value})
+                    except tk.TclError:
+                        pass
+                if "eraser" in tags:
+                    self.eraser_lines.append(item)
+
     def clear_canvas(self):
         self.canvas.delete("all")
         self.eraser_lines.clear()
+        self.save_state()
 
     def update_eraser_lines_color(self):
         for line in self.eraser_lines:

@@ -28,13 +28,14 @@ class WhiteboardApp:
         self.initial_scroll_x = 0
         self.initial_scroll_y = 0
 
-        self.create_widgets()
-        self.setup_bindings()
-        
         # Initialize operations modules
+        self.canvas = tk.Canvas(self.root, bg="white", scrollregion=(0, 0, 10000, 10000))
         self.canvas_ops = CanvasOperations(self.canvas)
         self.text_ops = TextOperations(self.canvas, self.root)
         self.file_ops = FileOperations(self.canvas)
+
+        self.create_widgets()
+        self.setup_bindings()
 
     def create_widgets(self):
         self.controls_frame = tk.Frame(self.root)
@@ -58,10 +59,13 @@ class WhiteboardApp:
         self.home_button = tk.Button(self.controls_frame, text="Home", relief="groove", command=self.reset_view)
 
         # Pack buttons
+        self.undo_button = tk.Button(self.controls_frame, text="Undo", relief="groove", command=self.canvas_ops.undo)
+        self.redo_button = tk.Button(self.controls_frame, text="Redo", relief="groove", command=self.canvas_ops.redo)
+
         buttons = [self.color_button, self.clear_button, self.save_button, self.save_type_menu,
                   self.load_button, self.dark_mode_button, self.eraser_button, self.notes_button,
                   self.freehand_button, self.line_button, self.rectangle_button, self.oval_button,
-                  self.text_button, self.home_button]
+                  self.text_button, self.home_button, self.undo_button, self.redo_button]
         
         for button in buttons:
             button.pack(side="left", padx=5, pady=5)
@@ -78,8 +82,7 @@ class WhiteboardApp:
         # Create font controls
         self.setup_font_controls()
 
-        # Create canvas and scrollbars
-        self.canvas = tk.Canvas(self.root, bg="white", scrollregion=(0, 0, 10000, 10000))
+        # Create scrollbars
         self.scroll_x = tk.Scrollbar(self.root, orient="horizontal", command=self.canvas.xview)
         self.scroll_y = tk.Scrollbar(self.root, orient="vertical", command=self.canvas.yview)
         
@@ -157,11 +160,13 @@ class WhiteboardApp:
                 self.drawing_color, self.line_width
             )
             self.prev_x, self.prev_y = current_x, current_y
+            self.canvas_ops.save_state()
 
     def stop_drawing(self, event):
         self.is_drawing = False
         if self.current_shape == "text":
             self.text_ops.stop_text_drawing(event)
+        self.canvas_ops.save_state()
 
     def change_line_width(self, value):
         self.line_width = int(float(value))
@@ -203,6 +208,12 @@ class WhiteboardApp:
                       self.load_button, self.dark_mode_button, self.eraser_button,
                       self.notes_button, self.freehand_button, self.line_button,
                       self.rectangle_button, self.oval_button, self.text_button,
+                      self.home_button, self.undo_button, self.redo_button]:
+            button.config(bg=button_bg, fg=fg_color)
+        for button in [self.color_button, self.clear_button, self.save_button,
+                      self.load_button, self.dark_mode_button, self.eraser_button,
+                      self.notes_button, self.freehand_button, self.line_button,
+                      self.rectangle_button, self.oval_button, self.text_button,
                       self.home_button]:
             button.config(bg=button_bg, fg=fg_color)
             
@@ -232,6 +243,7 @@ class WhiteboardApp:
 
     def clear_canvas(self):
         self.canvas_ops.clear_canvas()
+        self.canvas_ops.save_state()
 
     def save_canvas(self):
         self.file_ops.show_save_dialog(self.save_type_var.get())
